@@ -1,24 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import TaglineSection from './sections/TaglineSection/TaglineSection';
+import Timeline from './sections/Timeline/Timeline';
+import WhatsNextSection from './sections/WhatsNextSection/WhatsNextSection';
 
 function App() {
+  const [pageBg, setPageBg] = useState('#121212');
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      style={{
+        '--bg-wash': pageBg,
+        backgroundColor: pageBg,
+        transition: 'background-color 0.35s ease',
+      } as React.CSSProperties}
+    >
+      <Timeline onActiveColorChange={setPageBg} />
+      <WhatsNextSection />
+      <TaglineSection />
     </div>
   );
 }

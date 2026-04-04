@@ -1,0 +1,374 @@
+/* ---- Interactive sheet panel ---- */
+.timeline-sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  border: 0;
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  cursor: default;
+}
+
+.timeline-sheet-backdrop--open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.timeline-sheet {
+  position: fixed;
+  z-index: 50;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50vw;
+  max-width: 50vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  padding: 0;
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(28px);
+  transform: translateX(100%);
+  opacity: 0;
+  transition: transform 0.26s ease-out, opacity 0.2s ease-out;
+}
+
+.timeline-sheet--open {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.timeline-sheet__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.timeline-sheet__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: clamp(24px, 5vw, 40px);
+  padding-bottom: 48px;
+}
+
+.timeline-sheet__header {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.timeline-sheet__title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.timeline-sheet__main-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
+.timeline-sheet__header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+.timeline-sheet__header-actions .timeline-sheet__close {
+  margin-top: 0;
+}
+
+.timeline-sheet__close {
+  flex-shrink: 0;
+  margin-top: 4px;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.82);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.timeline-sheet__close:hover {
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.timeline-sheet__close:focus-visible {
+  outline: 2px solid rgba(0, 229, 160, 0.45);
+  outline-offset: 2px;
+}
+
+a.timeline-sheet__close {
+  text-decoration: none;
+}
+
+.timeline-sheet__close--icon-only {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0;
+  padding: 6px;
+}
+
+.timeline-sheet__close-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.timeline-sheet__sub-row {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.timeline-sheet__subtitle {
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  min-width: min(200px, 100%);
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  font-weight: 400;
+  /* Tighter line box reduces extra space under caps vs the period / pill (flex cross-axis centers line boxes) */
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.timeline-sheet__subtitle-spacer {
+  flex: 1;
+  min-width: 0;
+}
+
+.timeline-sheet__meta {
+  display: inline-flex;
+  align-items: center;
+  align-self: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Rail `.timeline-tag` uses margin-top; reset inside the sheet so the subheader stays vertically centered */
+.timeline-sheet .timeline-tag {
+  margin: 0;
+}
+
+/*
+ * Match timeline rail `.timeline-tag`; two classes beat one so we still override `margin-top: 10px`.
+ */
+.timeline-tag.timeline-sheet__type-tag {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 8px 12px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.28);
+  line-height: 1.1;
+  box-sizing: border-box;
+  width: fit-content;
+}
+
+/* Match timeline `.timeline-heading-meta .timeline-period` sizing so the row aligns with the rail. */
+.timeline-period.timeline-sheet__period {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 8px 0;
+  line-height: 1;
+  box-sizing: border-box;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.timeline-sheet__media {
+  position: relative;
+  width: 100%;
+  /* Height driven by carousel content (aspect-ratio on expanded row) */
+  min-height: 0;
+  height: auto;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(3px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-sheet__media > * {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+.timeline-sheet__media-placeholder {
+  width: 100%;
+  min-height: var(--timeline-sheet-media-floor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-sheet__media-placeholder span {
+  font-family: 'Space Mono', monospace;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.72);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.timeline-sheet__body {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.timeline-sheet__block {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.timeline-sheet__section-heading {
+  margin: 0;
+  font-family: 'Micro 5', sans-serif;
+  font-size: 40px;
+  line-height: 0.85;
+  letter-spacing: 0.02em;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 1);
+}
+
+.timeline-sheet__rule {
+  margin: 0;
+  border: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.timeline-sheet__inner {
+  --timeline-sheet-accent: #00ff84;
+}
+
+.timeline-sheet__tldr {
+  margin: 0;
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.timeline-sheet__inner .grapheme-reveal__noise--zero,
+.timeline-sheet__inner .grapheme-reveal__noise--one {
+  color: var(--timeline-sheet-accent);
+}
+
+.timeline-sheet__shipped {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.timeline-sheet__shipped-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 19px;
+}
+
+.timeline-sheet__shipped-arrow {
+  flex-shrink: 0;
+  display: inline-block;
+  font-family: 'Geist Mono', monospace;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.timeline-sheet__shipped-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.timeline-sheet__shipped-title {
+  margin: 0 0 4px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.timeline-sheet__shipped-body {
+  margin: 0;
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.timeline-sheet__voices {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.timeline-sheet__voice-quote {
+  margin: 0 0 6px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.timeline-sheet__voice-attribution {
+  margin: 0;
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+@media (max-width: 1024px) {
+  .timeline-sheet {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+  }
+}

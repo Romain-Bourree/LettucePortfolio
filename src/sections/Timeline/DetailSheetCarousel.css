@@ -1,0 +1,224 @@
+.timeline-sheet-carousel {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+/* ---- Entry animation (replaces Framer wrapper) ---- */
+.timeline-sheet-carousel.is-entering {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.timeline-sheet-carousel.is-entered {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition-delay: 0.15s;
+}
+
+/* ---- Stack ---- */
+.timeline-sheet-carousel__stack {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 4px;
+  container-type: inline-size;
+}
+
+.timeline-sheet-carousel__stack--reduced {
+  gap: 4px;
+  container-type: inline-size;
+}
+
+/* ---- Row — CSS-driven height transition ---- */
+/* Expanded height derived from 5:3 image ratio → 60% of container width */
+.timeline-sheet-carousel__row {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 8px;
+  flex-shrink: 0;
+  width: 100%;
+  outline: none;
+  height: 2.5rem;
+  transition: height 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  contain: layout style;
+  will-change: height;
+}
+
+.timeline-sheet-carousel__row.is-expanded {
+  /* 60cqi = 60% of container width ≈ 5:3 aspect ratio.
+     Fallback to 60vw for browsers without container queries. */
+  height: 60cqi;
+}
+
+.timeline-sheet-carousel__row:focus-visible {
+  outline: 2px solid rgba(0, 229, 160, 0.55);
+  outline-offset: 2px;
+}
+
+/* ---- Row image — GPU-promoted layer with zoom on expand ---- */
+.timeline-sheet-carousel__row-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+  will-change: transform;
+  transform: scale(1.0) translateZ(0);
+  transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.timeline-sheet-carousel__row.is-expanded .timeline-sheet-carousel__row-img {
+  transform: scale(1.04) translateZ(0);
+}
+
+/* ---- Shade overlay — always in DOM, toggled via opacity ---- */
+.timeline-sheet-carousel__row-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.timeline-sheet-carousel__row-shade.is-active {
+  opacity: 1;
+}
+
+.timeline-sheet-carousel__row-shade--static {
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.timeline-sheet-carousel__row-shade--static.is-active {
+  opacity: 1;
+}
+
+/* ---- Meta overlay — always in DOM, toggled via opacity + transform ---- */
+.timeline-sheet-carousel__row-meta {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0 16px 20px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.timeline-sheet-carousel__row-meta.is-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- Code label ---- */
+.timeline-sheet-carousel__code {
+  margin: 0;
+  text-align: left;
+  align-self: flex-start;
+  width: 100%;
+  font-family: 'Geist Mono', monospace;
+  font-size: 12px;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ---- Single image ---- */
+.timeline-sheet-carousel__solo-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.timeline-sheet-carousel__solo-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.timeline-sheet-carousel__solo-meta {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 16px 20px;
+  pointer-events: none;
+}
+
+/* ---- Reduced motion: static heights ---- */
+.timeline-sheet-carousel__row--static {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background: transparent;
+  height: 2.5rem;
+  transition: height 0.2s ease;
+}
+
+.timeline-sheet-carousel__row--static-expanded {
+  height: 60cqi;
+}
+
+.timeline-sheet-carousel__row--static:focus-visible {
+  outline: 2px solid rgba(0, 229, 160, 0.55);
+  outline-offset: 2px;
+}
+
+.timeline-sheet-carousel__row-img-wrap {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.timeline-sheet-carousel__row--static .timeline-sheet-carousel__row-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.timeline-sheet-carousel__row-meta--static {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0 16px 20px;
+  pointer-events: none;
+  background: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.timeline-sheet-carousel__row-meta--static.is-active {
+  opacity: 1;
+}

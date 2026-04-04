@@ -1,0 +1,467 @@
+.about-hero {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-wash, #1d1d1d);
+}
+
+.about-hero__inner {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: clamp(20px, 3vw, 36px);
+  max-width: 980px;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 72px) var(--site-gutter, 20px) clamp(40px, 6vw, 72px);
+}
+
+.about-hero__sticker-bounds {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  /* visible so negative initial x (peek from edge) is not clipped */
+  overflow: visible;
+}
+
+.about-hero__sticker-bounds .sticker-peel-root {
+  pointer-events: none;
+}
+
+.about-hero__sticker-bounds .about-hero__sticker-pop--in .sticker-peel-root {
+  pointer-events: auto;
+}
+
+/* inset:0 so Draggable bounds match sticker-bounds (parent was collapsing to 0×0). Origin ≈ sticker center for x:75 y:95 width:120. */
+.about-hero__sticker-pop {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: scale(0.72);
+  transform-origin: 135px 155px;
+  pointer-events: none;
+}
+
+.about-hero__sticker-pop--in {
+  pointer-events: none;
+  animation: about-hero-sticker-pop 0.5s cubic-bezier(0.22, 1.24, 0.36, 1) forwards;
+}
+
+@keyframes about-hero-sticker-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.about-hero__content {
+  position: relative;
+  z-index: 3;
+  flex: 0 0 auto;
+}
+
+.about-hero button,
+.about-hero a {
+  cursor: pointer;
+}
+
+.about-hero__logo {
+  position: relative;
+  display: inline-block;
+  margin-bottom: clamp(80px, 30vw, 180px);
+  line-height: 0;
+}
+
+.about-hero__logo-svg {
+  display: block;
+  width: 83px;
+  height: auto;
+}
+
+.about-hero__layer1 {
+  text-align: left;
+}
+
+.about-hero__title {
+  margin: 0;
+  font-family: 'Micro 5', sans-serif;
+  font-size: 72px;
+  font-weight: 400;
+  line-height: 0.6;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.about-hero__title-reveal {
+  opacity: 0;
+  transform: translateY(10px) scale(0.985);
+  filter: blur(1.5px);
+  transition: opacity 320ms ease, transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 420ms ease;
+}
+
+.about-hero__title-reveal.about-hero__step--visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+.about-hero__aka {
+  color: #00ff84;
+}
+
+.about-hero__copy-block {
+  max-width: 100%;
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.about-hero__intro {
+  margin: 0;
+  margin-top: 1rem;
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.about-hero__intro,
+.about-hero__layer2,
+.about-hero__scroll {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 320ms ease, transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.about-hero__step--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-hero__layer2 {
+  position: relative;
+  z-index: 4;
+  margin-top: 28px;
+}
+
+.about-hero__audience-inline {
+  display: inline-block;
+  position: relative;
+  font: inherit;
+  vertical-align: baseline;
+  white-space: normal;
+}
+
+.about-hero__for {
+  color: inherit;
+  font-weight: inherit;
+}
+
+.about-hero__audience-control {
+  display: inline-block;
+  position: relative;
+}
+
+.about-hero__audience-btn {
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0 0.55em;
+  font: inherit;
+  line-height: inherit;
+  color: #00ff84;
+  background: rgba(0, 229, 160, 0.14);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  vertical-align: baseline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.about-hero__audience-btn--measure {
+  pointer-events: none;
+  cursor: default;
+  box-sizing: border-box;
+}
+
+.about-hero__audience-btn:hover {
+  background: rgba(0, 255, 132, 0.25);
+}
+
+.about-hero__audience-btn:focus-visible {
+  outline: 2px solid rgba(0, 255, 132, 0.5);
+  outline-offset: 2px;
+}
+
+.about-hero__audience-caret-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 16px;
+  min-width: 16px;
+  max-width: 16px;
+  height: 16px;
+  min-height: 16px;
+  max-height: 16px;
+  flex: 0 0 16px;
+  margin-left: 0.32em;
+  line-height: 1;
+  vertical-align: middle;
+  transform-origin: 50% 50%;
+  transition: transform 0.2s ease;
+}
+
+.about-hero__audience-caret {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-1px) rotate(45deg);
+}
+
+.about-hero__audience-btn--open .about-hero__audience-caret-wrap {
+  transform: translateY(1px) rotate(180deg);
+}
+
+.about-hero__audience-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  min-width: 180px;
+  list-style: none;
+  border-radius: 2px;
+  margin-top: 2px;
+}
+
+.about-hero__audience-menu-item {
+  display: inline-block;
+  text-align: left;
+  font: inherit;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  border: none;
+  border-radius: 2px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+
+.about-hero__audience-menu-item:hover {
+  background: #00ff84;
+  color: #000000;
+}
+
+.about-hero__audience-menu-item--active {
+  color: #00ff84;
+}
+
+.about-hero__audience-menu-item:focus-visible {
+  outline: 2px solid rgba(0, 229, 160, 0.5);
+  outline-offset: 2px;
+}
+
+.about-hero__slot {
+  position: relative;
+  margin-top: 0;
+  max-width: 100%;
+}
+
+.about-hero__measure {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.about-hero__copy-block--measure {
+  margin: 0;
+}
+
+.about-hero__para {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.82);
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.about-hero__para-text {
+  display: inline;
+}
+
+.about-hero__para-text .grapheme-reveal__noise--zero {
+  color: #97ffcd;
+}
+
+.about-hero__para-text .grapheme-reveal__noise--one {
+  color: #00ff84;
+}
+
+.about-hero__intro-text .grapheme-reveal__noise--zero {
+  color: #97ffcd;
+}
+
+.about-hero__intro-text .grapheme-reveal__noise--one {
+  color: #00ff84;
+}
+
+.about-hero__scroll {
+  position: sticky;
+  z-index: 1;
+  bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+  margin-top: 2rem;
+  align-self: flex-start;
+}
+
+.about-hero__scroll-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.2s ease, background-color 0.2s ease;
+  padding: 10px 14px 10px 0;
+  border-radius: 4px;
+}
+
+.about-hero__scroll-link:hover {
+  color: rgba(0, 255, 132, 1);
+}
+
+.about-hero__scroll-link:focus-visible {
+  outline: 2px solid rgba(0, 255, 132, 0.45);
+  outline-offset: 3px;
+}
+
+/* Same sweep as “let’s talk” CTA; keeps ↓ + about-hero-scroll-nudge on .about-hero__scroll-icon */
+.about-hero__scroll-link.about-hero__scroll-link--sweep {
+  position: relative;
+  overflow: hidden;
+  /* Tighter than base scroll-link (10px); ~6px vertical leaves room for ↓ nudge inside overflow:hidden */
+  padding: 6px 6px;
+  line-height: 1.2;
+  border-radius: 2px;
+  color: #00ff84;
+  transition: color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.about-hero__scroll-link.about-hero__scroll-link--sweep::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 229, 160, 0.22);
+  pointer-events: none;
+  z-index: 0;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.about-hero__scroll-link.about-hero__scroll-link--sweep:hover::before,
+.about-hero__scroll-link.about-hero__scroll-link--sweep:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.about-hero__scroll-link.about-hero__scroll-link--sweep:hover,
+.about-hero__scroll-link.about-hero__scroll-link--sweep:focus-visible {
+  color: #00ff84;
+}
+
+.about-hero__scroll-link.about-hero__scroll-link--sweep .about-hero__scroll-text,
+.about-hero__scroll-link.about-hero__scroll-link--sweep .about-hero__scroll-icon {
+  position: relative;
+  z-index: 1;
+}
+
+.about-hero__scroll-link.about-hero__scroll-link--sweep .about-hero__scroll-icon {
+  line-height: 1;
+  font-size: 12px;
+}
+
+.about-hero__scroll-icon {
+  display: inline-block;
+  font-family: 'Geist Mono', monospace;
+  font-size: 14px;
+  line-height: 1.55;
+  background: transparent;
+  padding: 0;
+  animation: about-hero-scroll-nudge 2.2s ease-in-out infinite;
+}
+
+.about-hero__scroll-link:hover .about-hero__scroll-icon {
+  color: rgba(0, 255, 132, 0.95);
+}
+
+@keyframes about-hero-scroll-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translateY(4px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-hero__intro,
+  .about-hero__layer2,
+  .about-hero__scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .about-hero__title-reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    animation: none;
+  }
+
+  .about-hero__scroll {
+    transition: none;
+  }
+
+  .about-hero__scroll-icon {
+    animation: none;
+  }
+
+  .about-hero__scroll-link.about-hero__scroll-link--sweep,
+  .about-hero__scroll-link.about-hero__scroll-link--sweep::before {
+    transition: none;
+  }
+
+  .about-hero__sticker-pop--in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
