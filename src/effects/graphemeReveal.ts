@@ -1,14 +1,20 @@
-import gsap from 'gsap';
+import gsap from "gsap";
 
 export function segmentGraphemes(text: string): string[] {
   const IntlWithSeg = Intl as typeof Intl & {
-    Segmenter?: new (locales: string, options: { granularity: string }) => {
+    Segmenter?: new (
+      locales: string,
+      options: { granularity: string },
+    ) => {
       segment(input: string): Iterable<{ segment: string }>;
     };
   };
   const Seg = IntlWithSeg.Segmenter;
-  if (typeof Seg === 'function') {
-    return Array.from(new Seg('en', { granularity: 'grapheme' }).segment(text), (s) => s.segment);
+  if (typeof Seg === "function") {
+    return Array.from(
+      new Seg("en", { granularity: "grapheme" }).segment(text),
+      (s) => s.segment,
+    );
   }
   return Array.from(text);
 }
@@ -19,15 +25,19 @@ function keepCharStableWhileScrambling(ch: string): boolean {
 
 function escapeHtml(text: string): string {
   return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
-export function buildRevealFrame(graphemes: string[], p: number, pool: string): string {
-  let out = '';
+export function buildRevealFrame(
+  graphemes: string[],
+  p: number,
+  pool: string,
+): string {
+  let out = "";
   const n = graphemes.length;
   const pl = pool.length || 1;
   for (let i = 0; i < n; i++) {
@@ -45,8 +55,12 @@ export function buildRevealFrame(graphemes: string[], p: number, pool: string): 
   return out;
 }
 
-function buildRevealFrameHTML(graphemes: string[], p: number, pool: string): string {
-  let out = '';
+function buildRevealFrameHTML(
+  graphemes: string[],
+  p: number,
+  pool: string,
+): string {
+  let out = "";
   const n = graphemes.length;
   const pl = pool.length || 1;
   for (let i = 0; i < n; i++) {
@@ -56,11 +70,11 @@ function buildRevealFrameHTML(graphemes: string[], p: number, pool: string): str
     } else {
       const scrambled = pool[Math.floor(Math.random() * pl)]!;
       const toneClass =
-        scrambled === '0'
-          ? ' grapheme-reveal__noise--zero'
-          : scrambled === '1'
-            ? ' grapheme-reveal__noise--one'
-            : '';
+        scrambled === "0"
+          ? " grapheme-reveal__noise--zero"
+          : scrambled === "1"
+            ? " grapheme-reveal__noise--one"
+            : "";
       out += `<span class="grapheme-reveal__noise${toneClass}">${escapeHtml(scrambled)}</span>`;
     }
   }
@@ -78,13 +92,23 @@ export function runGraphemeReveal(options: {
   /** Keeps `data-text` in sync with the plain-text scramble (e.g. title `h2` + `::after`). */
   dataTextSyncEl?: HTMLElement | null;
 }): gsap.core.Tween {
-  const { el, toText, pool = '01', animState, onComplete, dataTextSyncEl } = options;
+  const {
+    el,
+    toText,
+    pool = "01",
+    animState,
+    onComplete,
+    dataTextSyncEl,
+  } = options;
   const graphemes = segmentGraphemes(toText);
   const n = graphemes.length;
 
   const syncDataText = (p: number) => {
     if (dataTextSyncEl) {
-      dataTextSyncEl.setAttribute('data-text', buildRevealFrame(graphemes, p, pool));
+      dataTextSyncEl.setAttribute(
+        "data-text",
+        buildRevealFrame(graphemes, p, pool),
+      );
     }
   };
 
@@ -98,7 +122,7 @@ export function runGraphemeReveal(options: {
   return gsap.to(animState, {
     p: n,
     duration,
-    ease: 'power2.out',
+    ease: "power2.out",
     onUpdate: () => {
       el.innerHTML = buildRevealFrameHTML(graphemes, animState.p, pool);
       syncDataText(animState.p);
@@ -106,7 +130,7 @@ export function runGraphemeReveal(options: {
     onComplete: () => {
       el.textContent = toText;
       if (dataTextSyncEl) {
-        dataTextSyncEl.setAttribute('data-text', toText);
+        dataTextSyncEl.setAttribute("data-text", toText);
       }
       onComplete?.();
     },

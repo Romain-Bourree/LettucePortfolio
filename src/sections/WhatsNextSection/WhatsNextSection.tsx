@@ -1,5 +1,5 @@
-import React from 'react';
-import './WhatsNextSection.css';
+import React from "react";
+import "./WhatsNextSection.css";
 
 export default function WhatsNextSection() {
   return (
@@ -7,8 +7,7 @@ export default function WhatsNextSection() {
       <div className="whats-next__inner">
         <h1 className="whats-next__kicker">What&apos;s next</h1>
         <h2 id="whats-next-heading" className="whats-next__lead">
-          If you want to build something together,
-          {' '}
+          If you want to build something together,{" "}
           <a
             className="whats-next__button whats-next__cta whats-next__cta--link005"
             href="mailto:r.bourree@gmail.com"

@@ -1,4 +1,6 @@
 .about-hero {
+  --about-hero-copy-gap: 20px;
+
   position: relative;
   z-index: 2;
   width: 100%;
@@ -20,7 +22,8 @@
   max-width: 980px;
   width: 100%;
   margin: 0 auto;
-  padding: clamp(40px, 6vw, 72px) var(--site-gutter, 20px) clamp(40px, 6vw, 72px);
+  padding: clamp(40px, 6vw, 72px) var(--site-gutter, 20px)
+    clamp(40px, 6vw, 72px);
 }
 
 .about-hero__sticker-bounds {
@@ -52,7 +55,8 @@
 
 .about-hero__sticker-pop--in {
   pointer-events: none;
-  animation: about-hero-sticker-pop 0.5s cubic-bezier(0.22, 1.24, 0.36, 1) forwards;
+  animation: about-hero-sticker-pop 0.5s cubic-bezier(0.22, 1.24, 0.36, 1)
+    forwards;
 }
 
 @keyframes about-hero-sticker-pop {
@@ -96,7 +100,7 @@
 
 .about-hero__title {
   margin: 0;
-  font-family: 'Micro 5', sans-serif;
+  font-family: "Micro 5", sans-serif;
   font-size: 72px;
   font-weight: 400;
   line-height: 0.6;
@@ -105,11 +109,23 @@
   color: rgba(255, 255, 255, 0.95);
 }
 
+/* Inline-block per-character spans leave baseline strut space below each line; mobile’s
+   two-line title stacks that into a large gap before the intro. Top-align removes it. */
+.about-hero__title .text-reveal__char,
+.about-hero__title .text-reveal__text,
+.about-hero__title .text-reveal__muted,
+.about-hero__title .text-reveal__revealed {
+  vertical-align: top;
+}
+
 .about-hero__title-reveal {
   opacity: 0;
   transform: translateY(10px) scale(0.985);
   filter: blur(1.5px);
-  transition: opacity 320ms ease, transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1), filter 420ms ease;
+  transition:
+    opacity 320ms ease,
+    transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 420ms ease;
 }
 
 .about-hero__title-reveal.about-hero__step--visible {
@@ -124,14 +140,14 @@
 
 .about-hero__copy-block {
   max-width: 100%;
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 14px;
   line-height: 1.55;
 }
 
 .about-hero__intro {
   margin: 0;
-  margin-top: 1rem;
+  margin-top: var(--about-hero-copy-gap);
   color: rgba(255, 255, 255, 0.84);
 }
 
@@ -140,7 +156,9 @@
 .about-hero__scroll {
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 320ms ease, transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition:
+    opacity 320ms ease,
+    transform 420ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .about-hero__step--visible {
@@ -234,6 +252,52 @@
 
 .about-hero__audience-btn--open .about-hero__audience-caret-wrap {
   transform: translateY(1px) rotate(180deg);
+}
+
+.about-hero__audience-select-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: baseline;
+  max-width: 100%;
+}
+
+.about-hero__audience-select {
+  appearance: none;
+  -webkit-appearance: none;
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  padding: 0 1.35em 0 0.55em;
+  max-width: 100%;
+  font: inherit;
+  line-height: inherit;
+  color: #00ff84;
+  background: rgba(0, 229, 160, 0.14);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  box-sizing: border-box;
+  vertical-align: baseline;
+}
+
+.about-hero__audience-select:focus-visible {
+  outline: 2px solid rgba(0, 229, 160, 0.5);
+  outline-offset: 2px;
+}
+
+.about-hero__audience-select-caret {
+  position: absolute;
+  right: 0.32em;
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  pointer-events: none;
+  line-height: 1;
 }
 
 .about-hero__audience-menu {
@@ -336,13 +400,15 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
-  font-family: 'Space Mono', monospace;
+  font-family: "Space Mono", monospace;
   font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
   color: rgba(255, 255, 255, 0.8);
-  transition: color 0.2s ease, background-color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
   padding: 10px 14px 10px 0;
   border-radius: 4px;
 }
@@ -369,7 +435,7 @@
 }
 
 .about-hero__scroll-link.about-hero__scroll-link--sweep::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -393,20 +459,23 @@
   color: #00ff84;
 }
 
-.about-hero__scroll-link.about-hero__scroll-link--sweep .about-hero__scroll-text,
-.about-hero__scroll-link.about-hero__scroll-link--sweep .about-hero__scroll-icon {
+.about-hero__scroll-link.about-hero__scroll-link--sweep
+  .about-hero__scroll-text,
+.about-hero__scroll-link.about-hero__scroll-link--sweep
+  .about-hero__scroll-icon {
   position: relative;
   z-index: 1;
 }
 
-.about-hero__scroll-link.about-hero__scroll-link--sweep .about-hero__scroll-icon {
+.about-hero__scroll-link.about-hero__scroll-link--sweep
+  .about-hero__scroll-icon {
   line-height: 1;
   font-size: 12px;
 }
 
 .about-hero__scroll-icon {
   display: inline-block;
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 14px;
   line-height: 1.55;
   background: transparent;
@@ -427,6 +496,36 @@
   50% {
     transform: translateY(4px);
     opacity: 1;
+  }
+}
+
+/* Pop scale pivot ≈ sticker center for STICKER_INITIAL_POSITION.tablet (96, 122), width 120 */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .about-hero__sticker-pop {
+    transform-origin: 156px 182px;
+  }
+}
+
+@media (max-width: 767px) {
+  .about-hero__inner {
+    padding-top: 16px;
+    /* Avoid flex gap + .about-hero__scroll margin stacking (read as ~2× title→intro gap) */
+    gap: 0;
+  }
+
+  .about-hero__logo {
+    margin-bottom: 120px;
+  }
+
+  .about-hero__sticker-pop {
+    transform-origin: 95px 122px;
+  }
+
+  /* Flow after copy; sticky + large margin felt wrong on small viewports */
+  .about-hero__scroll {
+    position: static;
+    bottom: auto;
+    margin-top: var(--about-hero-copy-gap);
   }
 }
 

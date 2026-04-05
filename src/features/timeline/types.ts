@@ -1,6 +1,6 @@
-export type TimelineItemType = 'life' | 'career' | 'side';
-export type TimelineSide = 'left' | 'right';
-export type TimelineTrack = 'left' | 'right';
+export type TimelineItemType = "life" | "career" | "side";
+export type TimelineSide = "left" | "right";
+export type TimelineTrack = "left" | "right";
 
 export interface TimelineItem {
   name: string;

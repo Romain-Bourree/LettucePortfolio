@@ -7,14 +7,14 @@ import {
   useMemo,
   useId,
   type CSSProperties,
-} from 'react';
-import gsap from 'gsap';
-import { Draggable } from 'gsap/dist/Draggable';
-import { InertiaPlugin } from 'gsap/dist/InertiaPlugin';
+} from "react";
+import gsap from "gsap";
+import { Draggable } from "gsap/dist/Draggable";
+import { InertiaPlugin } from "gsap/dist/InertiaPlugin";
 
-import { prefersReducedMotion } from '../../features/headerSection/helpers';
+import { prefersReducedMotion } from "../../features/headerSection/helpers";
 
-import './StickerPeel.css';
+import "./StickerPeel.css";
 
 gsap.registerPlugin(Draggable, InertiaPlugin);
 
@@ -32,7 +32,7 @@ interface StickerPeelProps {
   shadowIntensity?: number;
   /** Specular “shine” strength. `0` turns it off. Typical subtle range ~0.02–0.08. */
   lightingIntensity?: number;
-  initialPosition?: 'center' | 'random' | { x: number; y: number };
+  initialPosition?: "center" | "random" | { x: number; y: number };
   /** Rotation (deg) of the peel hinge. Ignored when followPointerEntry is true (after first pointer entry). */
   peelDirection?: number;
   /** When true, peel opens from the edge the pointer crossed (top / right / bottom / left). */
@@ -49,7 +49,11 @@ interface StickerPeelProps {
 }
 
 /** Degrees so the default top-edge peel aligns with the side the pointer entered from. */
-function peelDegreesFromPointerInRect(clientX: number, clientY: number, rect: DOMRectReadOnly): number {
+function peelDegreesFromPointerInRect(
+  clientX: number,
+  clientY: number,
+  rect: DOMRectReadOnly,
+): number {
   const px = clientX - rect.left;
   const py = clientY - rect.top;
   const distTop = py;
@@ -74,18 +78,18 @@ function peelDegreesFromPointerInRect(clientX: number, clientY: number, rect: DO
 }
 
 interface CSSVars extends CSSProperties {
-  '--sticker-rotate'?: string;
-  '--sticker-p'?: string;
-  '--sticker-peelback-hover'?: string;
-  '--sticker-peelback-active'?: string;
-  '--sticker-peel-easing'?: string;
-  '--sticker-peel-hover-easing'?: string;
-  '--sticker-width'?: string;
-  '--sticker-shadow-opacity'?: number;
-  '--sticker-lighting-constant'?: number;
-  '--peel-direction'?: string;
-  '--sticker-start'?: string;
-  '--sticker-end'?: string;
+  "--sticker-rotate"?: string;
+  "--sticker-p"?: string;
+  "--sticker-peelback-hover"?: string;
+  "--sticker-peelback-active"?: string;
+  "--sticker-peel-easing"?: string;
+  "--sticker-peel-hover-easing"?: string;
+  "--sticker-width"?: string;
+  "--sticker-shadow-opacity"?: number;
+  "--sticker-lighting-constant"?: number;
+  "--peel-direction"?: string;
+  "--sticker-start"?: string;
+  "--sticker-end"?: string;
 }
 
 export default function StickerPeel({
@@ -93,23 +97,25 @@ export default function StickerPeel({
   rotate = 30,
   peelBackHoverPct = 30,
   peelBackActivePct = 40,
-  peelEasing = 'power3.out',
-  peelHoverEasing = 'power2.out',
+  peelEasing = "power3.out",
+  peelHoverEasing = "power2.out",
   width = 200,
   shadowIntensity = 0.6,
   lightingIntensity = 0.05,
-  initialPosition = 'center',
+  initialPosition = "center",
   peelDirection = 0,
   followPointerEntry = false,
   introPeelWhenVisible = false,
   introPeelHoldMs = 220,
-  className = '',
+  className = "",
 }: StickerPeelProps) {
-  const filterId = useId().replace(/:/g, '');
+  const filterId = useId().replace(/:/g, "");
   const hasSpecular = lightingIntensity > 0;
   const flapSpecular = lightingIntensity * 2;
   const [livePeelDirection, setLivePeelDirection] = useState(peelDirection);
-  const effectivePeelDirection = followPointerEntry ? livePeelDirection : peelDirection;
+  const effectivePeelDirection = followPointerEntry
+    ? livePeelDirection
+    : peelDirection;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const dragTargetRef = useRef<HTMLDivElement>(null);
@@ -119,26 +125,30 @@ export default function StickerPeel({
 
   const defaultPadding = 12;
 
-  type IntroPeelPhase = 'peeled' | 'rest';
-  const [introPeelPhase, setIntroPeelPhase] = useState<IntroPeelPhase>('rest');
+  type IntroPeelPhase = "peeled" | "rest";
+  const [introPeelPhase, setIntroPeelPhase] = useState<IntroPeelPhase>("rest");
 
   useLayoutEffect(() => {
     if (!introPeelWhenVisible) return;
     if (prefersReducedMotion()) return;
 
-    setIntroPeelPhase('peeled');
+    setIntroPeelPhase("peeled");
     const settleAfterMs = INTRO_PEEL_CLIP_TRANSITION_MS + introPeelHoldMs;
-    const t = window.setTimeout(() => setIntroPeelPhase('rest'), settleAfterMs);
+    const t = window.setTimeout(() => setIntroPeelPhase("rest"), settleAfterMs);
     return () => window.clearTimeout(t);
   }, [introPeelWhenVisible, introPeelHoldMs]);
 
-  const isInitialCenter = initialPosition === 'center';
+  const isInitialCenter = initialPosition === "center";
   const initialX =
-    !isInitialCenter && typeof initialPosition === 'object' && initialPosition.x !== undefined
+    !isInitialCenter &&
+    typeof initialPosition === "object" &&
+    initialPosition.x !== undefined
       ? initialPosition.x
       : 0;
   const initialY =
-    !isInitialCenter && typeof initialPosition === 'object' && initialPosition.y !== undefined
+    !isInitialCenter &&
+    typeof initialPosition === "object" &&
+    initialPosition.y !== undefined
       ? initialPosition.y
       : 0;
 
@@ -149,15 +159,15 @@ export default function StickerPeel({
     const boundsEl = target.parentNode as HTMLElement;
 
     const draggable = Draggable.create(target, {
-      type: 'x,y',
+      type: "x,y",
       bounds: boundsEl,
       inertia: true,
       onDrag(this: Draggable) {
         const rot = gsap.utils.clamp(-24, 24, this.deltaX * 0.4);
-        gsap.to(target, { rotation: rot, duration: 0.15, ease: 'power1.out' });
+        gsap.to(target, { rotation: rot, duration: 0.15, ease: "power1.out" });
       },
       onDragEnd() {
-        const rotationEase = 'power2.out';
+        const rotationEase = "power2.out";
         const duration = 0.8;
         gsap.to(target, { rotation: 0, duration, ease: rotationEase });
       },
@@ -174,8 +184,8 @@ export default function StickerPeel({
       if (draggableInstanceRef.current) {
         draggableInstanceRef.current.update();
 
-        const currentX = gsap.getProperty(target, 'x') as number;
-        const currentY = gsap.getProperty(target, 'y') as number;
+        const currentX = gsap.getProperty(target, "x") as number;
+        const currentY = gsap.getProperty(target, "y") as number;
 
         const boundsRect = boundsEl.getBoundingClientRect();
         const targetRect = target.getBoundingClientRect();
@@ -191,18 +201,18 @@ export default function StickerPeel({
             x: newX,
             y: newY,
             duration: 0.3,
-            ease: 'power2.out',
+            ease: "power2.out",
           });
         }
       }
     };
 
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('orientationchange', handleResize);
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("orientationchange", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('orientationchange', handleResize);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("orientationchange", handleResize);
       if (draggableInstanceRef.current) {
         draggableInstanceRef.current.kill();
         draggableInstanceRef.current = null;
@@ -223,7 +233,9 @@ export default function StickerPeel({
       if (!el) return;
       const rect = el.getBoundingClientRect();
       if (rect.width < 1 || rect.height < 1) return;
-      setLivePeelDirection(peelDegreesFromPointerInRect(clientX, clientY, rect));
+      setLivePeelDirection(
+        peelDegreesFromPointerInRect(clientX, clientY, rect),
+      );
     },
     [followPointerEntry],
   );
@@ -258,7 +270,7 @@ export default function StickerPeel({
     };
 
     const container = containerRef.current;
-    const eventType = 'mousemove';
+    const eventType = "mousemove";
 
     if (container) {
       container.addEventListener(eventType, updateLight);
@@ -271,38 +283,38 @@ export default function StickerPeel({
     if (!container) return;
 
     const handleTouchStart = () => {
-      container.classList.add('touch-active');
+      container.classList.add("touch-active");
     };
 
     const handleTouchEnd = () => {
-      container.classList.remove('touch-active');
+      container.classList.remove("touch-active");
     };
 
-    container.addEventListener('touchstart', handleTouchStart);
-    container.addEventListener('touchend', handleTouchEnd);
-    container.addEventListener('touchcancel', handleTouchEnd);
+    container.addEventListener("touchstart", handleTouchStart);
+    container.addEventListener("touchend", handleTouchEnd);
+    container.addEventListener("touchcancel", handleTouchEnd);
 
     return () => {
-      container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchend', handleTouchEnd);
-      container.removeEventListener('touchcancel', handleTouchEnd);
+      container.removeEventListener("touchstart", handleTouchStart);
+      container.removeEventListener("touchend", handleTouchEnd);
+      container.removeEventListener("touchcancel", handleTouchEnd);
     };
   }, []);
 
   const cssVars: CSSVars = useMemo(
     () => ({
-      '--sticker-rotate': `${rotate}deg`,
-      '--sticker-p': `${defaultPadding}px`,
-      '--sticker-peelback-hover': `${peelBackHoverPct}%`,
-      '--sticker-peelback-active': `${peelBackActivePct}%`,
-      '--sticker-peel-easing': peelEasing,
-      '--sticker-peel-hover-easing': peelHoverEasing,
-      '--sticker-width': `${width}px`,
-      '--sticker-shadow-opacity': shadowIntensity,
-      '--sticker-lighting-constant': lightingIntensity,
-      '--peel-direction': `${effectivePeelDirection}deg`,
-      '--sticker-start': `calc(-1 * ${defaultPadding}px)`,
-      '--sticker-end': `calc(100% + ${defaultPadding}px)`,
+      "--sticker-rotate": `${rotate}deg`,
+      "--sticker-p": `${defaultPadding}px`,
+      "--sticker-peelback-hover": `${peelBackHoverPct}%`,
+      "--sticker-peelback-active": `${peelBackActivePct}%`,
+      "--sticker-peel-easing": peelEasing,
+      "--sticker-peel-hover-easing": peelHoverEasing,
+      "--sticker-width": `${width}px`,
+      "--sticker-shadow-opacity": shadowIntensity,
+      "--sticker-lighting-constant": lightingIntensity,
+      "--peel-direction": `${effectivePeelDirection}deg`,
+      "--sticker-start": `calc(-1 * ${defaultPadding}px)`,
+      "--sticker-end": `calc(100% + ${defaultPadding}px)`,
     }),
     [
       rotate,
@@ -320,33 +332,33 @@ export default function StickerPeel({
 
   const stickerMainStyle: CSSProperties = {
     clipPath:
-      'polygon(var(--sticker-start) var(--sticker-start), var(--sticker-end) var(--sticker-start), var(--sticker-end) var(--sticker-end), var(--sticker-start) var(--sticker-end))',
-    transition: 'clip-path 0.6s ease-out',
-    filter: shadowIntensity > 0 ? `url(#${filterId}-dropShadow)` : 'none',
-    willChange: 'clip-path, transform',
+      "polygon(var(--sticker-start) var(--sticker-start), var(--sticker-end) var(--sticker-start), var(--sticker-end) var(--sticker-end), var(--sticker-start) var(--sticker-end))",
+    transition: "clip-path 0.6s ease-out",
+    filter: shadowIntensity > 0 ? `url(#${filterId}-dropShadow)` : "none",
+    willChange: "clip-path, transform",
   };
 
   const flapStyle: CSSProperties = {
     clipPath:
-      'polygon(var(--sticker-start) var(--sticker-start), var(--sticker-end) var(--sticker-start), var(--sticker-end) var(--sticker-start), var(--sticker-start) var(--sticker-start))',
-    top: 'calc(-100% - var(--sticker-p) - var(--sticker-p))',
-    transform: 'scaleY(-1)',
-    transition: 'all 0.6s ease-out',
-    willChange: 'clip-path, transform',
+      "polygon(var(--sticker-start) var(--sticker-start), var(--sticker-end) var(--sticker-start), var(--sticker-end) var(--sticker-start), var(--sticker-start) var(--sticker-start))",
+    top: "calc(-100% - var(--sticker-p) - var(--sticker-p))",
+    transform: "scaleY(-1)",
+    transition: "all 0.6s ease-out",
+    willChange: "clip-path, transform",
   };
 
   const peelRotationTransition = followPointerEntry
-    ? 'transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)'
+    ? "transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)"
     : undefined;
 
   const imageStyle: CSSProperties = {
     transform: `rotate(calc(${rotate}deg - ${effectivePeelDirection}deg))`,
     transition: peelRotationTransition,
     width: `${width}px`,
-    height: 'auto',
-    aspectRatio: '1',
-    objectFit: 'contain',
-    verticalAlign: 'top',
+    height: "auto",
+    aspectRatio: "1",
+    objectFit: "contain",
+    verticalAlign: "top",
   };
 
   const shadowImageStyle: CSSProperties = {
@@ -418,7 +430,12 @@ export default function StickerPeel({
                   specularConstant={flapSpecular}
                   lightingColor="white"
                 >
-                  <fePointLight ref={pointLightFlippedRef} x={100} y={100} z={300} />
+                  <fePointLight
+                    ref={pointLightFlippedRef}
+                    x={100}
+                    y={100}
+                    z={300}
+                  />
                 </feSpecularLighting>
                 <feComposite in="spec" in2="SourceGraphic" result="lit" />
                 <feComposite in="lit" in2="SourceAlpha" operator="in" />
@@ -448,27 +465,33 @@ export default function StickerPeel({
 
       <div
         className={`sticker-container sticker-peel-${filterId}${
-          introPeelPhase === 'peeled' ? ' sticker-peel--intro-mount' : ''
+          introPeelPhase === "peeled" ? " sticker-peel--intro-mount" : ""
         }`}
         ref={containerRef}
         onPointerEnter={(e) => {
-          if (e.pointerType === 'mouse' || e.pointerType === 'pen') {
+          if (e.pointerType === "mouse" || e.pointerType === "pen") {
             updatePeelFromPointer(e.clientX, e.clientY);
           }
         }}
         onPointerDown={(e) => {
-          if (e.pointerType === 'touch') {
+          if (e.pointerType === "touch") {
             updatePeelFromPointer(e.clientX, e.clientY);
           }
         }}
         style={{
           transform: `rotate(${effectivePeelDirection}deg)`,
-          transformOrigin: 'center',
+          transformOrigin: "center",
           transition: peelRotationTransition,
         }}
       >
         <div className="sticker-main" style={stickerMainStyle}>
-          <div style={hasSpecular ? { filter: `url(#${filterId}-pointLight)` } : undefined}>
+          <div
+            style={
+              hasSpecular
+                ? { filter: `url(#${filterId}-pointLight)` }
+                : undefined
+            }
+          >
             <img
               src={imageSrc}
               alt=""
@@ -494,7 +517,13 @@ export default function StickerPeel({
         </div>
 
         <div className="sticker-flap-layer sticker-flap" style={flapStyle}>
-          <div style={hasSpecular ? { filter: `url(#${filterId}-pointLightFlipped)` } : undefined}>
+          <div
+            style={
+              hasSpecular
+                ? { filter: `url(#${filterId}-pointLightFlipped)` }
+                : undefined
+            }
+          >
             <img
               src={imageSrc}
               alt=""

@@ -1,9 +1,15 @@
-import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { runGraphemeReveal, type GraphemeRevealState } from '../../effects/graphemeReveal';
-import type { PanelEntry, PanelQuote } from '../../features/timeline';
-import { DetailSheetCarousel, type DetailSheetCarouselSlide } from './DetailSheetCarousel';
-import './DetailSheet.css';
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import {
+  runGraphemeReveal,
+  type GraphemeRevealState,
+} from "../../effects/graphemeReveal";
+import type { PanelEntry, PanelQuote } from "../../features/timeline";
+import {
+  DetailSheetCarousel,
+  type DetailSheetCarouselSlide,
+} from "./DetailSheetCarousel";
+import "./DetailSheet.css";
 
 function quoteStableKey(quote: PanelQuote): string {
   return `${quote.author}-${quote.text.slice(0, 24)}`;
@@ -11,18 +17,42 @@ function quoteStableKey(quote: PanelQuote): string {
 
 /** Used when a panel has no `gallery` and the timeline item has no `image`. */
 const DEFAULT_DETAIL_GALLERY: DetailSheetCarouselSlide[] = [
-  { src: 'https://picsum.photos/seed/lp-ds-1/1200/800', alt: 'Placeholder', code: '# 01' },
-  { src: 'https://picsum.photos/seed/lp-ds-2/1200/800', alt: 'Placeholder', code: '# 02' },
-  { src: 'https://picsum.photos/seed/lp-ds-3/1200/800', alt: 'Placeholder', code: '# 03' },
-  { src: 'https://picsum.photos/seed/lp-ds-4/1200/800', alt: 'Placeholder', code: '# 04' },
-  { src: 'https://picsum.photos/seed/lp-ds-5/1200/800', alt: 'Placeholder', code: '# 05' },
-  { src: 'https://picsum.photos/seed/lp-ds-6/1200/800', alt: 'Placeholder', code: '# 06' },
+  {
+    src: "https://picsum.photos/seed/lp-ds-1/1200/800",
+    alt: "Placeholder",
+    code: "# 01",
+  },
+  {
+    src: "https://picsum.photos/seed/lp-ds-2/1200/800",
+    alt: "Placeholder",
+    code: "# 02",
+  },
+  {
+    src: "https://picsum.photos/seed/lp-ds-3/1200/800",
+    alt: "Placeholder",
+    code: "# 03",
+  },
+  {
+    src: "https://picsum.photos/seed/lp-ds-4/1200/800",
+    alt: "Placeholder",
+    code: "# 04",
+  },
+  {
+    src: "https://picsum.photos/seed/lp-ds-5/1200/800",
+    alt: "Placeholder",
+    code: "# 05",
+  },
+  {
+    src: "https://picsum.photos/seed/lp-ds-6/1200/800",
+    alt: "Placeholder",
+    code: "# 06",
+  },
 ];
 
 interface SheetItem {
   name: string;
   period: string;
-  type: 'life' | 'career' | 'side';
+  type: "life" | "career" | "side";
   color: string;
   accent: string;
   image?: string;
@@ -40,10 +70,10 @@ interface DetailSheetProps {
 }
 
 function splitQuoteAuthor(author: string): { name: string; title: string } {
-  const [namePart, ...rest] = author.split('·');
+  const [namePart, ...rest] = author.split("·");
   return {
     name: namePart.trim(),
-    title: rest.join('·').trim(),
+    title: rest.join("·").trim(),
   };
 }
 
@@ -67,10 +97,18 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
   const headingShippedRef = useRef<HTMLHeadingElement>(null);
   const headingVoicesRef = useRef<HTMLHeadingElement>(null);
   const tldrRef = useRef<HTMLParagraphElement>(null);
-  const shippedTitleRefs = useRef<Map<string, HTMLParagraphElement | null>>(new Map());
-  const shippedBodyRefs = useRef<Map<string, HTMLParagraphElement | null>>(new Map());
-  const quoteTextRefs = useRef<Map<string, HTMLParagraphElement | null>>(new Map());
-  const quoteAttributionRefs = useRef<Map<string, HTMLParagraphElement | null>>(new Map());
+  const shippedTitleRefs = useRef<Map<string, HTMLParagraphElement | null>>(
+    new Map(),
+  );
+  const shippedBodyRefs = useRef<Map<string, HTMLParagraphElement | null>>(
+    new Map(),
+  );
+  const quoteTextRefs = useRef<Map<string, HTMLParagraphElement | null>>(
+    new Map(),
+  );
+  const quoteAttributionRefs = useRef<Map<string, HTMLParagraphElement | null>>(
+    new Map(),
+  );
 
   const getRevealState = (key: string): GraphemeRevealState => {
     const m = revealStatesRef.current;
@@ -82,7 +120,7 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
     return s;
   };
 
-  const tldrText = selectedPanelContent?.tldr ?? '';
+  const tldrText = selectedPanelContent?.tldr ?? "";
   const projectUrl = selectedPanelContent?.projectUrl;
   const shipped = selectedPanelContent?.shipped ?? [];
   const quotes = selectedPanelContent?.quotes ?? [];
@@ -101,7 +139,13 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!isSheetDomMounted || !isVisible || !selectedPanelContent || !selectedItem) return;
+    if (
+      !isSheetDomMounted ||
+      !isVisible ||
+      !selectedPanelContent ||
+      !selectedItem
+    )
+      return;
 
     revealStatesRef.current.forEach((s) => gsap.killTweensOf(s));
 
@@ -121,7 +165,7 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
     jobs.push({
       el: titleSpanRef.current,
       text: titleDisplayUpper,
-      key: 'sheet-title',
+      key: "sheet-title",
       dataTextSyncEl: titleHostRef.current,
     });
 
@@ -129,20 +173,36 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
       jobs.push({
         el: subtitleRef.current,
         text: selectedPanelContent.subtitle,
-        key: 'sheet-subtitle',
+        key: "sheet-subtitle",
       });
     }
 
-    jobs.push({ el: periodRef.current, text: selectedItem.period, key: 'sheet-period' });
-    jobs.push({ el: tagRef.current, text: tagLabel, key: 'sheet-tag' });
+    jobs.push({
+      el: periodRef.current,
+      text: selectedItem.period,
+      key: "sheet-period",
+    });
+    jobs.push({ el: tagRef.current, text: tagLabel, key: "sheet-tag" });
 
-    jobs.push({ el: headingTldrRef.current, text: 'TLDR', key: 'sheet-h-tldr' });
+    jobs.push({
+      el: headingTldrRef.current,
+      text: "TLDR",
+      key: "sheet-h-tldr",
+    });
     if (tldrTextInner) {
-      jobs.push({ el: tldrRef.current, text: tldrTextInner, key: 'sheet-tldr' });
+      jobs.push({
+        el: tldrRef.current,
+        text: tldrTextInner,
+        key: "sheet-tldr",
+      });
     }
 
     if (shippedInner.length > 0) {
-      jobs.push({ el: headingShippedRef.current, text: 'SHIPPED', key: 'sheet-h-shipped' });
+      jobs.push({
+        el: headingShippedRef.current,
+        text: "SHIPPED",
+        key: "sheet-h-shipped",
+      });
       for (const item of shippedInner) {
         jobs.push({
           el: shippedTitleRefs.current.get(item.title) ?? null,
@@ -158,11 +218,15 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
     }
 
     if (quotesInner.length > 0) {
-      jobs.push({ el: headingVoicesRef.current, text: 'VOICES', key: 'sheet-h-voices' });
+      jobs.push({
+        el: headingVoicesRef.current,
+        text: "VOICES",
+        key: "sheet-h-voices",
+      });
       for (const quote of quotesInner) {
         const qk = quoteStableKey(quote);
         const { name, title } = splitQuoteAuthor(quote.author);
-        const attribution = `${name}${title ? ` · ${title}` : ''}`;
+        const attribution = `${name}${title ? ` · ${title}` : ""}`;
         jobs.push({
           el: quoteTextRefs.current.get(qk) ?? null,
           text: `\u201C${quote.text}\u201D`,
@@ -181,12 +245,18 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
       runGraphemeReveal({
         el,
         toText: text,
-        pool: '01',
+        pool: "01",
         animState: getRevealState(key),
         dataTextSyncEl: dataTextSyncEl ?? undefined,
       });
     }
-  }, [isSheetDomMounted, isVisible, selectedPanelContent, selectedItem, tagLabel]);
+  }, [
+    isSheetDomMounted,
+    isVisible,
+    selectedPanelContent,
+    selectedItem,
+    tagLabel,
+  ]);
 
   if (!isSheetDomMounted || !selectedItem || !selectedPanelContent) return null;
 
@@ -196,15 +266,22 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
     <>
       <button
         type="button"
-        className={`timeline-sheet-backdrop ${isVisible ? 'timeline-sheet-backdrop--open' : ''}`}
+        className={`timeline-sheet-backdrop ${isVisible ? "timeline-sheet-backdrop--open" : ""}`}
         aria-label="Close timeline details panel"
         onClick={onClose}
       />
-      <aside className={`timeline-sheet ${isVisible ? 'timeline-sheet--open' : ''}`} aria-live="polite">
+      <aside
+        className={`timeline-sheet ${isVisible ? "timeline-sheet--open" : ""}`}
+        aria-live="polite"
+      >
         <div className="timeline-sheet__scroll">
           <div
             className="timeline-sheet__inner"
-            style={{ '--timeline-sheet-accent': selectedItem.accent } as React.CSSProperties}
+            style={
+              {
+                "--timeline-sheet-accent": selectedItem.accent,
+              } as React.CSSProperties
+            }
           >
             <header className="timeline-sheet__header">
               <div className="timeline-sheet__title-row">
@@ -257,13 +334,22 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
                     {selectedPanelContent.subtitle}
                   </p>
                 ) : (
-                  <span className="timeline-sheet__subtitle-spacer" aria-hidden />
+                  <span
+                    className="timeline-sheet__subtitle-spacer"
+                    aria-hidden
+                  />
                 )}
                 <div className="timeline-sheet__meta">
-                  <span ref={periodRef} className="timeline-period timeline-sheet__period">
+                  <span
+                    ref={periodRef}
+                    className="timeline-period timeline-sheet__period"
+                  >
                     {selectedItem.period}
                   </span>
-                  <span ref={tagRef} className="timeline-tag timeline-tag--inline timeline-sheet__type-tag">
+                  <span
+                    ref={tagRef}
+                    className="timeline-tag timeline-tag--inline timeline-sheet__type-tag"
+                  >
                     {tagLabel}
                   </span>
                 </div>
@@ -289,7 +375,10 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
 
             <div className="timeline-sheet__body">
               <section className="timeline-sheet__block">
-                <h3 ref={headingTldrRef} className="timeline-sheet__section-heading">
+                <h3
+                  ref={headingTldrRef}
+                  className="timeline-sheet__section-heading"
+                >
                   TLDR
                 </h3>
                 <p ref={tldrRef} className="timeline-sheet__tldr">
@@ -301,20 +390,31 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
                 <>
                   <hr className="timeline-sheet__rule" />
                   <section className="timeline-sheet__block">
-                    <h3 ref={headingShippedRef} className="timeline-sheet__section-heading">
+                    <h3
+                      ref={headingShippedRef}
+                      className="timeline-sheet__section-heading"
+                    >
                       SHIPPED
                     </h3>
                     <ul className="timeline-sheet__shipped">
                       {shipped.map((item) => (
-                        <li key={item.title} className="timeline-sheet__shipped-item">
-                          <span className="timeline-sheet__shipped-arrow" aria-hidden>
+                        <li
+                          key={item.title}
+                          className="timeline-sheet__shipped-item"
+                        >
+                          <span
+                            className="timeline-sheet__shipped-arrow"
+                            aria-hidden
+                          >
                             →
                           </span>
                           <div className="timeline-sheet__shipped-copy">
                             <p
                               ref={(el) => {
-                                if (el) shippedTitleRefs.current.set(item.title, el);
-                                else shippedTitleRefs.current.delete(item.title);
+                                if (el)
+                                  shippedTitleRefs.current.set(item.title, el);
+                                else
+                                  shippedTitleRefs.current.delete(item.title);
                               }}
                               className="timeline-sheet__shipped-title"
                             >
@@ -322,7 +422,8 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
                             </p>
                             <p
                               ref={(el) => {
-                                if (el) shippedBodyRefs.current.set(item.title, el);
+                                if (el)
+                                  shippedBodyRefs.current.set(item.title, el);
                                 else shippedBodyRefs.current.delete(item.title);
                               }}
                               className="timeline-sheet__shipped-body"
@@ -341,7 +442,10 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
                 <>
                   <hr className="timeline-sheet__rule" />
                   <section className="timeline-sheet__block">
-                    <h3 ref={headingVoicesRef} className="timeline-sheet__section-heading">
+                    <h3
+                      ref={headingVoicesRef}
+                      className="timeline-sheet__section-heading"
+                    >
                       VOICES
                     </h3>
                     <ul className="timeline-sheet__voices">
@@ -361,13 +465,14 @@ const DetailSheet: React.FC<DetailSheetProps> = ({
                             </p>
                             <p
                               ref={(el) => {
-                                if (el) quoteAttributionRefs.current.set(qk, el);
+                                if (el)
+                                  quoteAttributionRefs.current.set(qk, el);
                                 else quoteAttributionRefs.current.delete(qk);
                               }}
                               className="timeline-sheet__voice-attribution"
                             >
                               {name}
-                              {title ? ` · ${title}` : ''}
+                              {title ? ` · ${title}` : ""}
                             </p>
                           </li>
                         );

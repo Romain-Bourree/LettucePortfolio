@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
-import './PixelImage.css';
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import "./PixelImage.css";
 
 interface PixelImageProps {
   src: string;
@@ -16,7 +16,8 @@ interface PixelImageProps {
 function shuffleOrder(length: number, seedKey: string): number[] {
   const order = Array.from({ length }, (_, i) => i);
   let h = 0;
-  for (let i = 0; i < seedKey.length; i += 1) h = (h * 31 + seedKey.charCodeAt(i)) >>> 0;
+  for (let i = 0; i < seedKey.length; i += 1)
+    h = (h * 31 + seedKey.charCodeAt(i)) >>> 0;
   for (let i = order.length - 1; i > 0; i -= 1) {
     h = (h * 1103515245 + 12345) >>> 0;
     const j = h % (i + 1);
@@ -28,12 +29,12 @@ function shuffleOrder(length: number, seedKey: string): number[] {
 export function PixelImage({
   src,
   alt,
-  accentColor = '#121212',
+  accentColor = "#121212",
   rows = 18,
   cols = 18,
   pieceDuration = 0.2,
   stagger = 0.004,
-  className = '',
+  className = "",
 }: PixelImageProps) {
   const prefersReducedMotion = useReducedMotion();
   const [isRevealDone, setIsRevealDone] = useState(false);
@@ -77,7 +78,7 @@ export function PixelImage({
   return (
     <div
       className={`pixel-image ${className}`.trim()}
-      style={{ '--pixel-image-accent': accentColor } as React.CSSProperties}
+      style={{ "--pixel-image-accent": accentColor } as React.CSSProperties}
     >
       {/* Accent field — visible through “empty” tiles until each block fades in */}
       <div className="pixel-image__accent" aria-hidden />
@@ -85,7 +86,7 @@ export function PixelImage({
       <img
         src={src}
         alt={alt}
-        className={`pixel-image__final ${isRevealDone ? 'pixel-image__final--visible' : ''}`}
+        className={`pixel-image__final ${isRevealDone ? "pixel-image__final--visible" : ""}`}
       />
 
       {!isRevealDone && (
@@ -110,7 +111,11 @@ export function PixelImage({
                 }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: pieceDuration, delay, ease: [0.22, 1, 0.36, 1] }}
+                transition={{
+                  duration: pieceDuration,
+                  delay,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
                 onAnimationComplete={() => {
                   completedPiecesRef.current += 1;
                   if (completedPiecesRef.current >= totalPieces) {

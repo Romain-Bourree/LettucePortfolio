@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@400;500&family=Micro+5&family=Space+Mono:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter:wght@400;500&family=Micro+5&family=Space+Mono:wght@400;700&display=swap");
 
 /* ---- Progress bar ---- */
 .timeline-progress {
@@ -7,7 +7,7 @@
   left: 0;
   height: 1px;
   width: 0%;
-  background: linear-gradient(90deg, #00FF84, #ffffff);
+  background: linear-gradient(90deg, #00ff84, #ffffff);
   z-index: 100;
 }
 
@@ -16,7 +16,7 @@
   --timeline-content-offset: 102px;
   position: relative;
   background-color: var(--bg-wash);
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   min-height: 100vh;
   padding: 120px 0 0;
   overflow-x: clip;
@@ -42,7 +42,10 @@
   top: clamp(20px, 4vh, 40px);
   z-index: 50;
   padding: clamp(40px, 6vh, 80px)
-    max(var(--site-gutter, 20px), calc((100vw - 980px) / 2 + var(--site-gutter, 20px)))
+    max(
+      var(--site-gutter, 20px),
+      calc((100vw - 980px) / 2 + var(--site-gutter, 20px))
+    )
     clamp(140px, 28vh, 300px);
   pointer-events: none;
 }
@@ -54,7 +57,7 @@
   position: relative;
   display: inline-block;
   z-index: 1;
-  font-family: 'Micro 5', sans-serif;
+  font-family: "Micro 5", sans-serif;
   font-size: 72px;
   line-height: 0.5;
   letter-spacing: 0.02em;
@@ -67,7 +70,10 @@
   top: 0;
   left: 0;
   z-index: -1;
-  transform: translate(var(--timeline-year-shadow-offset), var(--timeline-year-shadow-offset));
+  transform: translate(
+    var(--timeline-year-shadow-offset),
+    var(--timeline-year-shadow-offset)
+  );
   background: linear-gradient(
     45deg,
     transparent 45%,
@@ -86,7 +92,7 @@
 .timeline-hero__subtitle {
   margin: 16px 0 0;
   max-width: 720px;
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -119,8 +125,20 @@
   width: 1px;
   background: rgba(255, 255, 255, 0.12);
   z-index: 0;
-  mask-image: linear-gradient(to bottom, transparent, white 80px, white calc(100% - 80px), transparent);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, white 80px, white calc(100% - 80px), transparent);
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    white 80px,
+    white calc(100% - 80px),
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    white 80px,
+    white calc(100% - 80px),
+    transparent
+  );
 }
 
 .timeline-rail--left {
@@ -136,7 +154,7 @@
   top: 0;
   display: inline-block;
   transform: translate(-50%, -32px);
-  font-family: 'Space Mono', monospace;
+  font-family: "Space Mono", monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -185,7 +203,7 @@
 }
 
 .timeline-range__trace--right {
-  background: #00FF84;
+  background: #00ff84;
 }
 
 .timeline-entry {
@@ -193,7 +211,9 @@
   min-height: 100px;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
   transform: translateX(0);
   z-index: 2;
 }
@@ -242,7 +262,7 @@
   margin-top: 14px;
   max-width: min(320px, calc(100vw - 32px));
   padding: 8px 12px;
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 11px;
   line-height: 1.45;
   letter-spacing: 0.02em;
@@ -262,7 +282,9 @@
   height: 8px;
   border-radius: 50%;
   background: #ffffff;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   z-index: 1;
 }
 
@@ -373,7 +395,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Space Mono', monospace;
+  font-family: "Space Mono", monospace;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -392,7 +414,7 @@
 }
 
 .timeline-name {
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 14px;
   font-weight: 500;
   text-transform: uppercase;
@@ -434,7 +456,7 @@
 
 .timeline-period {
   display: inline-block;
-  font-family: 'Space Mono', monospace;
+  font-family: "Space Mono", monospace;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.72);
   margin-top: 0;
@@ -470,7 +492,7 @@
 }
 
 .timeline-desc {
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 14px;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.84);
@@ -480,11 +502,15 @@
 @media (max-width: 1024px) {
   .timeline {
     --timeline-rail-left-pad: 24px;
-    --timeline-rail-left: max(24px, calc(var(--site-gutter, 24px) - var(--timeline-rail-left-pad)));
+    --timeline-rail-left: max(
+      24px,
+      calc(var(--site-gutter, 24px) - var(--timeline-rail-left-pad))
+    );
     --timeline-rail-gap: var(--timeline-rail-left-pad);
     --timeline-text-gap: 24px;
     --timeline-content-offset: calc(
-      var(--timeline-rail-left) + var(--timeline-rail-gap) + var(--timeline-text-gap)
+      var(--timeline-rail-left) + var(--timeline-rail-gap) +
+        var(--timeline-text-gap)
     );
   }
 
@@ -532,7 +558,10 @@
 
   .timeline-entry--left .timeline-connector {
     left: calc(var(--timeline-rail-left) + 0.5px);
-    width: max(8px, calc(var(--timeline-content-offset) - var(--timeline-rail-left) - 12px));
+    width: max(
+      8px,
+      calc(var(--timeline-content-offset) - var(--timeline-rail-left) - 12px)
+    );
     right: auto;
   }
 
@@ -540,7 +569,10 @@
     left: calc(var(--timeline-rail-left) + var(--timeline-rail-gap) + 0.5px);
     width: max(
       8px,
-      calc(var(--timeline-content-offset) - var(--timeline-rail-left) - var(--timeline-rail-gap) - 12px)
+      calc(
+        var(--timeline-content-offset) - var(--timeline-rail-left) -
+          var(--timeline-rail-gap) - 12px
+      )
     );
     right: auto;
   }
@@ -550,7 +582,10 @@
     left: var(--timeline-content-offset);
     right: auto;
     text-align: left;
-    max-width: min(320px, calc(100vw - var(--site-gutter, 24px) - var(--timeline-content-offset)));
+    max-width: min(
+      320px,
+      calc(100vw - var(--site-gutter, 24px) - var(--timeline-content-offset))
+    );
   }
 
   .timeline-entry--left .timeline-heading-meta {
@@ -563,6 +598,12 @@
 
   .timeline-entry--left .timeline-detail {
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 767px) {
+  .timeline {
+    padding-top: 20px;
   }
 }
 

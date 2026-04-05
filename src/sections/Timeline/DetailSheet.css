@@ -33,7 +33,9 @@
   backdrop-filter: blur(28px);
   transform: translateX(100%);
   opacity: 0;
-  transition: transform 0.26s ease-out, opacity 0.2s ease-out;
+  transition:
+    transform 0.26s ease-out,
+    opacity 0.2s ease-out;
 }
 
 .timeline-sheet--open {
@@ -91,7 +93,7 @@
 .timeline-sheet__close {
   flex-shrink: 0;
   margin-top: 4px;
-  font-family: 'Space Mono', monospace;
+  font-family: "Space Mono", monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -145,7 +147,7 @@ a.timeline-sheet__close {
   padding: 0;
   flex: 1;
   min-width: min(200px, 100%);
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 14px;
   font-weight: 400;
   /* Tighter line box reduces extra space under caps vs the period / pill (flex cross-axis centers line boxes) */
@@ -180,7 +182,7 @@ a.timeline-sheet__close {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Space Mono', monospace;
+  font-family: "Space Mono", monospace;
   font-size: 10px;
   font-weight: 400;
   text-transform: uppercase;
@@ -202,7 +204,7 @@ a.timeline-sheet__close {
   padding: 8px 0;
   line-height: 1;
   box-sizing: border-box;
-  font-family: 'Space Mono', monospace;
+  font-family: "Space Mono", monospace;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.88);
 }
@@ -235,7 +237,7 @@ a.timeline-sheet__close {
 }
 
 .timeline-sheet__media-placeholder span {
-  font-family: 'Space Mono', monospace;
+  font-family: "Space Mono", monospace;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.72);
   text-transform: uppercase;
@@ -256,7 +258,7 @@ a.timeline-sheet__close {
 
 .timeline-sheet__section-heading {
   margin: 0;
-  font-family: 'Micro 5', sans-serif;
+  font-family: "Micro 5", sans-serif;
   font-size: 40px;
   line-height: 0.85;
   letter-spacing: 0.02em;
@@ -279,7 +281,7 @@ a.timeline-sheet__close {
 
 .timeline-sheet__tldr {
   margin: 0;
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 14px;
   line-height: 1.6;
   color: rgba(255, 255, 255, 0.88);
@@ -308,7 +310,7 @@ a.timeline-sheet__close {
 .timeline-sheet__shipped-arrow {
   flex-shrink: 0;
   display: inline-block;
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 18px;
   font-weight: 400;
   line-height: 1;
@@ -322,7 +324,7 @@ a.timeline-sheet__close {
 
 .timeline-sheet__shipped-title {
   margin: 0 0 4px;
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 14px;
   font-weight: 700;
   line-height: 1.5;
@@ -331,7 +333,7 @@ a.timeline-sheet__close {
 
 .timeline-sheet__shipped-body {
   margin: 0;
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 14px;
   font-weight: 400;
   line-height: 1.5;
@@ -349,7 +351,7 @@ a.timeline-sheet__close {
 
 .timeline-sheet__voice-quote {
   margin: 0 0 6px;
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 14px;
   font-weight: 700;
   line-height: 1.5;
@@ -358,7 +360,7 @@ a.timeline-sheet__close {
 
 .timeline-sheet__voice-attribution {
   margin: 0;
-  font-family: 'Geist Mono', monospace;
+  font-family: "Geist Mono", monospace;
   font-size: 14px;
   font-weight: 400;
   line-height: 1.5;

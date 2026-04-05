@@ -17,7 +17,7 @@
 
 .tagline-section__headline {
   margin: 0;
-  font-family: 'Micro 5', sans-serif;
+  font-family: "Micro 5", sans-serif;
   font-size: 72px;
   font-weight: 400;
   line-height: 0.6;
@@ -37,7 +37,7 @@
   --tagline-lettuce-shadow-offset: 0.05em;
   position: relative;
   z-index: 1;
-  color: #00FF84;
+  color: #00ff84;
   text-transform: uppercase;
 }
 
@@ -47,7 +47,10 @@
   top: 0;
   left: 0;
   z-index: -1;
-  transform: translate(var(--tagline-lettuce-shadow-offset), var(--tagline-lettuce-shadow-offset));
+  transform: translate(
+    var(--tagline-lettuce-shadow-offset),
+    var(--tagline-lettuce-shadow-offset)
+  );
   background: linear-gradient(
     45deg,
     transparent 45%,

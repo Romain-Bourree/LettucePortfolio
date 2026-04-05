@@ -1,10 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
-import gsap from 'gsap';
-import { Howler } from 'howler';
-import useSound from 'use-sound';
-import HeaderSection from '../HeaderSection/HeaderSection';
-import DetailSheet from './DetailSheet';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { createPortal } from "react-dom";
+import gsap from "gsap";
+import { Howler } from "howler";
+import useSound from "use-sound";
+import HeaderSection from "../HeaderSection/HeaderSection";
+import DetailSheet from "./DetailSheet";
 import {
   ACTIVATION_ORDER,
   COMPACT_OVERLAP_SWAP_MS,
@@ -27,17 +33,19 @@ import {
   TIMELINE_ITEMS as items,
   VIEWPORT_TRIGGER_RATIO,
   parsePeriodYears,
-} from '../../features/timeline';
-import type { TimelineGeometry } from '../../features/timeline';
-import './Timeline.css';
+} from "../../features/timeline";
+import type { TimelineGeometry } from "../../features/timeline";
+import "./Timeline.css";
 
 interface TimelineProps {
   onActiveColorChange?: (color: string) => void;
 }
 
-const INIT_MIN_YEAR = Math.min(...items.map((item) => parsePeriodYears(item.period).start));
+const INIT_MIN_YEAR = Math.min(
+  ...items.map((item) => parsePeriodYears(item.period).start),
+);
 
-function TimelineArchiveIcon({ className = '' }: { className?: string }) {
+function TimelineArchiveIcon({ className = "" }: { className?: string }) {
   return (
     <svg
       className={className}
@@ -91,7 +99,11 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
   const [, setCenterProgress] = useState(0);
   const [scrubbedScroll, setScrubbedScroll] = useState(0);
   const [displayYear, setDisplayYear] = useState(INIT_MIN_YEAR);
-  const [noSheetCursorHint, setNoSheetCursorHint] = useState<{ x: number; y: number; label: string } | null>(null);
+  const [noSheetCursorHint, setNoSheetCursorHint] = useState<{
+    x: number;
+    y: number;
+    label: string;
+  } | null>(null);
   const noSheetCursorRafRef = useRef<number | null>(null);
   const noSheetCursorPendingRef = useRef<{ x: number; y: number } | null>(null);
   const yearTweenObj = useRef({ value: INIT_MIN_YEAR });
@@ -105,16 +117,25 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     const key = selectedItem.name.toUpperCase();
     return PANEL_DATA[key] ?? { tldr: selectedItem.desc, quotes: [] };
   }, [selectedItem]);
-  const activeQuote = selectedPanelContent && selectedPanelContent.quotes.length > 0
-    ? selectedPanelContent.quotes[quoteIndex % selectedPanelContent.quotes.length]
-    : null;
+  const activeQuote =
+    selectedPanelContent && selectedPanelContent.quotes.length > 0
+      ? selectedPanelContent.quotes[
+          quoteIndex % selectedPanelContent.quotes.length
+        ]
+      : null;
 
   const parsedPeriods = items.map((item) => parsePeriodYears(item.period));
   const minYear = Math.min(...parsedPeriods.map((p) => p.start));
   const maxYear = Math.max(...parsedPeriods.map((p) => p.end));
-  const yearSpanLayout = Math.max(1, maxYear - minYear + LAYOUT_END_BUFFER_YEARS);
+  const yearSpanLayout = Math.max(
+    1,
+    maxYear - minYear + LAYOUT_END_BUFFER_YEARS,
+  );
   const pxPerYear = isCompactTimeline ? PX_PER_YEAR_MOBILE : PX_PER_YEAR;
-  const timelineHeight = Math.max(2400, yearSpanLayout * pxPerYear + TIMELINE_CLOSURE_EXTRA_PX);
+  const timelineHeight = Math.max(
+    2400,
+    yearSpanLayout * pxPerYear + TIMELINE_CLOSURE_EXTRA_PX,
+  );
   const currentYear = minYear + yearSpanLayout * scrubbedScroll;
   const titleYear = displayYear;
 
@@ -123,7 +144,7 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     const startRatio = (start - minYear) / yearSpanLayout;
     const endRatio = (end - minYear) / yearSpanLayout;
     const durationRatio = Math.max(0, endRatio - startRatio);
-    const track = item.type === 'career' ? 'right' : 'left';
+    const track = item.type === "career" ? "right" : "left";
     return {
       start,
       end,
@@ -133,22 +154,23 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     };
   });
   const activeStartYear = activeIndex >= 0 ? geometry[activeIndex].start : null;
-  const graduatedIdx = items.findIndex((item) => item.name === 'Graduated');
-  const dsquareIdx = items.findIndex((item) => item.name === 'Dsquare');
+  const graduatedIdx = items.findIndex((item) => item.name === "Graduated");
+  const dsquareIdx = items.findIndex((item) => item.name === "Dsquare");
   const isLinkedWithActive = useCallback(
-    (idx: number): boolean => (
-      activeIndex >= 0
-      && LINKED_HIGHLIGHT_GROUPS.some((group) => (
-        group.includes(items[activeIndex].name) && group.includes(items[idx].name)
-      ))
-    ),
+    (idx: number): boolean =>
+      activeIndex >= 0 &&
+      LINKED_HIGHLIGHT_GROUPS.some(
+        (group) =>
+          group.includes(items[activeIndex].name) &&
+          group.includes(items[idx].name),
+      ),
     [activeIndex],
   );
   const isCompactOverlapFadeIdx = (idx: number): boolean => {
     if (!isCompactTimeline || activeIndex < 0) return false;
     if (idx !== graduatedIdx && idx !== dsquareIdx) return false;
     const activeName = items[activeIndex].name;
-    if (activeName !== 'Graduated' && activeName !== 'Dsquare') return false;
+    if (activeName !== "Graduated" && activeName !== "Dsquare") return false;
     const showGraduated = compactOverlapPhase % 2 === 0;
     return idx === (showGraduated ? dsquareIdx : graduatedIdx);
   };
@@ -163,7 +185,7 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     });
   })();
   const nextSameTrackIdx = (() => {
-    const nextSeen: Record<'left' | 'right', number> = { left: -1, right: -1 };
+    const nextSeen: Record<"left" | "right", number> = { left: -1, right: -1 };
     const out = new Array<number>(geometry.length).fill(-1);
     for (let i = geometry.length - 1; i >= 0; i -= 1) {
       const track = geometry[i].track;
@@ -177,7 +199,9 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     if (nextIdx < 0) return g.end;
     return Math.min(g.end, geometry[nextIdx].start);
   });
-  const orderRankByIdx = items.map((item) => ACTIVATION_ORDER.indexOf(item.name as (typeof ACTIVATION_ORDER)[number]));
+  const orderRankByIdx = items.map((item) =>
+    ACTIVATION_ORDER.indexOf(item.name as (typeof ACTIVATION_ORDER)[number]),
+  );
   const idxByOrderRank = (() => {
     const out = new Map<number, number>();
     orderRankByIdx.forEach((rank, idx) => {
@@ -207,28 +231,34 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     orderRankByIdx,
     isOrderUnlockedAtYear,
   });
-  scrollDepsRef.current = { minYear, yearSpanLayout, geometry, orderRankByIdx, isOrderUnlockedAtYear };
+  scrollDepsRef.current = {
+    minYear,
+    yearSpanLayout,
+    geometry,
+    orderRankByIdx,
+    isOrderUnlockedAtYear,
+  };
 
   const periodLayoutRef = useRef({ parsedPeriods, minYear });
   periodLayoutRef.current = { parsedPeriods, minYear };
 
   useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => {
       setSoundEnabled(!mq.matches);
       scrollScrubEnabledRef.current = !mq.matches;
     };
     sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
   }, []);
 
   useEffect(() => {
-    const mq = window.matchMedia('(max-width: 1024px)');
+    const mq = window.matchMedia("(max-width: 1024px)");
     const sync = () => setIsCompactTimeline(mq.matches);
     sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
   }, []);
 
   useEffect(() => {
@@ -263,17 +293,17 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
       }
 
       const ctx = Howler.ctx;
-      if (ctx?.state === 'suspended') void ctx.resume();
+      if (ctx?.state === "suspended") void ctx.resume();
     };
 
     const opts: AddEventListenerOptions = { capture: true, passive: true };
-    window.addEventListener('pointerdown', unlock, { ...opts, once: true });
-    window.addEventListener('keydown', unlock, { ...opts, once: true });
-    window.addEventListener('touchstart', unlock, { ...opts, once: true });
+    window.addEventListener("pointerdown", unlock, { ...opts, once: true });
+    window.addEventListener("keydown", unlock, { ...opts, once: true });
+    window.addEventListener("touchstart", unlock, { ...opts, once: true });
     return () => {
-      window.removeEventListener('pointerdown', unlock, { capture: true });
-      window.removeEventListener('keydown', unlock, { capture: true });
-      window.removeEventListener('touchstart', unlock, { capture: true });
+      window.removeEventListener("pointerdown", unlock, { capture: true });
+      window.removeEventListener("keydown", unlock, { capture: true });
+      window.removeEventListener("touchstart", unlock, { capture: true });
     };
   }, [playTick, soundEnabled]);
 
@@ -283,7 +313,9 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
       const tick = () => {
         const target = scrollTargetRef.current;
         const prev = scrubbedRef.current;
-        const alpha = isCompactRef.current ? SCROLL_SCRUB_ALPHA_MOBILE : SCROLL_SCRUB_ALPHA;
+        const alpha = isCompactRef.current
+          ? SCROLL_SCRUB_ALPHA_MOBILE
+          : SCROLL_SCRUB_ALPHA;
         let next = prev + (target - prev) * alpha;
         if (Math.abs(target - next) < 0.0005) next = target;
         scrubbedRef.current = next;
@@ -299,17 +331,23 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
 
     const update = () => {
       const ctx = Howler.ctx;
-      if (ctx?.state === 'suspended') void ctx.resume();
+      if (ctx?.state === "suspended") void ctx.resume();
 
       const el = containerRef.current;
       if (!el) return;
 
-      const { minYear: minY, yearSpanLayout: span, geometry: geom, orderRankByIdx: ranks, isOrderUnlockedAtYear: orderUnlockedAtYear } =
-        scrollDepsRef.current;
+      const {
+        minYear: minY,
+        yearSpanLayout: span,
+        geometry: geom,
+        orderRankByIdx: ranks,
+        isOrderUnlockedAtYear: orderUnlockedAtYear,
+      } = scrollDepsRef.current;
 
       const rect = el.getBoundingClientRect();
       const total = Math.max(1, el.scrollHeight);
-      const centerOffset = -rect.top + window.innerHeight * VIEWPORT_TRIGGER_RATIO;
+      const centerOffset =
+        -rect.top + window.innerHeight * VIEWPORT_TRIGGER_RATIO;
       const p = Math.max(0, Math.min(1, centerOffset / total));
       setCenterProgress(p);
       scrollTargetRef.current = p;
@@ -334,7 +372,9 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
         const r = entry.getBoundingClientRect();
         if (r.bottom > -100 && r.top < vh + 100) nextVisible.add(i);
 
-        const dotEl = entry.querySelector('.timeline-dot') as HTMLDivElement | null;
+        const dotEl = entry.querySelector(
+          ".timeline-dot",
+        ) as HTMLDivElement | null;
         if (!dotEl) return;
         const dr = dotEl.getBoundingClientRect();
         if (dr.height < 1) return;
@@ -352,7 +392,8 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
         const g = geom[idx];
         return yearAtCenter >= g.start;
       };
-      const isOrderUnlocked = (idx: number): boolean => orderUnlockedAtYear(idx, yearAtCenter);
+      const isOrderUnlocked = (idx: number): boolean =>
+        orderUnlockedAtYear(idx, yearAtCenter);
 
       let gatedActiveIdx = -1;
       let earliestUnactivatedRank = Infinity;
@@ -372,7 +413,10 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
           nearestEligibleIdx = i;
         }
         if (!hasActivated) {
-          if (rank < earliestUnactivatedRank || (rank === earliestUnactivatedRank && dist < earliestUnactivatedDist)) {
+          if (
+            rank < earliestUnactivatedRank ||
+            (rank === earliestUnactivatedRank && dist < earliestUnactivatedDist)
+          ) {
             earliestUnactivatedRank = rank;
             earliestUnactivatedDist = dist;
             gatedActiveIdx = i;
@@ -388,11 +432,11 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     };
 
     update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.addEventListener('resize', update, { passive: true });
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update, { passive: true });
     return () => {
-      window.removeEventListener('scroll', update);
-      window.removeEventListener('resize', update);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
       if (scrubRafRef.current != null) {
         cancelAnimationFrame(scrubRafRef.current);
         scrubRafRef.current = null;
@@ -414,7 +458,7 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     gsap.to(yearTweenObj.current, {
       value: targetYear,
       duration: 0.5,
-      ease: 'power2.out',
+      ease: "power2.out",
       onUpdate: () => setDisplayYear(Math.round(yearTweenObj.current.value)),
     });
   }, [activeIndex]);
@@ -423,13 +467,13 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     const washEl = bgWashRef.current;
     if (!washEl) return;
 
-    const targetColor = activeIndex >= 0 ? items[activeIndex].color : '#121212';
+    const targetColor = activeIndex >= 0 ? items[activeIndex].color : "#121212";
     onActiveColorChange?.(targetColor);
     gsap.to(washEl, {
       backgroundColor: targetColor,
       opacity: 0,
       duration: 0.35,
-      ease: 'power2.out',
+      ease: "power2.out",
       overwrite: true,
     });
   }, [activeIndex, onActiveColorChange]);
@@ -440,7 +484,7 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     gsap.to(el, {
       width: `${scrubbedScroll * 100}%`,
       duration: 0.18,
-      ease: 'power2.out',
+      ease: "power2.out",
       overwrite: true,
     });
   }, [scrubbedScroll]);
@@ -448,15 +492,16 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
   useEffect(() => {
     detailRefs.current.forEach((detailEl, i) => {
       if (!detailEl) return;
-      const shouldShow = visibleSet.has(i) && (i === activeIndex || isLinkedWithActive(i));
+      const shouldShow =
+        visibleSet.has(i) && (i === activeIndex || isLinkedWithActive(i));
       gsap.killTweensOf(detailEl);
       if (shouldShow) {
         gsap.to(detailEl, {
-          height: 'auto',
+          height: "auto",
           autoAlpha: 1,
           y: 0,
           duration: 0.42,
-          ease: 'power2.out',
+          ease: "power2.out",
           overwrite: true,
         });
         return;
@@ -466,7 +511,7 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
         autoAlpha: 0,
         y: 8,
         duration: 0.28,
-        ease: 'power2.out',
+        ease: "power2.out",
         overwrite: true,
       });
     });
@@ -498,17 +543,25 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     setNoSheetCursorHint((prev) => (prev ? { ...prev, x: p.x, y: p.y } : null));
   }, []);
 
-  const handleNoSheetPointerEnter = useCallback((e: React.PointerEvent<HTMLDivElement>, label: string) => {
-    noSheetCursorPendingRef.current = { x: e.clientX, y: e.clientY };
-    setNoSheetCursorHint({ x: e.clientX, y: e.clientY, label });
-  }, []);
+  const handleNoSheetPointerEnter = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>, label: string) => {
+      noSheetCursorPendingRef.current = { x: e.clientX, y: e.clientY };
+      setNoSheetCursorHint({ x: e.clientX, y: e.clientY, label });
+    },
+    [],
+  );
 
-  const handleNoSheetPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
-    noSheetCursorPendingRef.current = { x: e.clientX, y: e.clientY };
-    if (noSheetCursorRafRef.current == null) {
-      noSheetCursorRafRef.current = requestAnimationFrame(flushNoSheetCursorPosition);
-    }
-  }, [flushNoSheetCursorPosition]);
+  const handleNoSheetPointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      noSheetCursorPendingRef.current = { x: e.clientX, y: e.clientY };
+      if (noSheetCursorRafRef.current == null) {
+        noSheetCursorRafRef.current = requestAnimationFrame(
+          flushNoSheetCursorPosition,
+        );
+      }
+    },
+    [flushNoSheetCursorPosition],
+  );
 
   const handleNoSheetPointerLeave = useCallback(() => {
     if (noSheetCursorRafRef.current != null) {
@@ -519,11 +572,14 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     setNoSheetCursorHint(null);
   }, []);
 
-  useEffect(() => () => {
-    if (noSheetCursorRafRef.current != null) {
-      cancelAnimationFrame(noSheetCursorRafRef.current);
-    }
-  }, []);
+  useEffect(
+    () => () => {
+      if (noSheetCursorRafRef.current != null) {
+        cancelAnimationFrame(noSheetCursorRafRef.current);
+      }
+    },
+    [],
+  );
 
   const jumpToTimelineIndex = useCallback((idx: number) => {
     const clampedIdx = Math.max(0, Math.min(items.length - 1, idx));
@@ -536,7 +592,7 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     const rect = entry.getBoundingClientRect();
     const targetY = window.innerHeight * VIEWPORT_TRIGGER_RATIO;
     const deltaY = rect.top - targetY;
-    window.scrollBy({ top: deltaY, behavior: 'smooth' });
+    window.scrollBy({ top: deltaY, behavior: "smooth" });
   }, []);
 
   useEffect(() => {
@@ -550,7 +606,12 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
   }, [isSheetMounted, isSheetVisible]);
 
   useEffect(() => {
-    if (!isSheetVisible || !selectedPanelContent || selectedPanelContent.quotes.length <= 1) return;
+    if (
+      !isSheetVisible ||
+      !selectedPanelContent ||
+      selectedPanelContent.quotes.length <= 1
+    )
+      return;
     const timer = window.setInterval(() => {
       setQuoteIndex((prev) => (prev + 1) % selectedPanelContent.quotes.length);
     }, QUOTE_ROTATION_MS);
@@ -563,14 +624,24 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
       <div ref={bgWashRef} className="timeline-bg-wash" />
       <HeaderSection />
 
-      <div id="journey" ref={journeyAnchorRef} className="timeline-hero-anchor" />
+      <div
+        id="journey"
+        ref={journeyAnchorRef}
+        className="timeline-hero-anchor"
+      />
 
       <div ref={sectionHeaderRef} className="timeline-section-header">
-        <h1 className="timeline-hero__title" data-text={String(titleYear)}>{titleYear}</h1>
+        <h1 className="timeline-hero__title" data-text={String(titleYear)}>
+          {titleYear}
+        </h1>
         <p className="timeline-hero__subtitle">To Now.</p>
       </div>
 
-      <div ref={timelineInnerRef} className="timeline-inner" style={{ minHeight: `${timelineHeight}px` }}>
+      <div
+        ref={timelineInnerRef}
+        className="timeline-inner"
+        style={{ minHeight: `${timelineHeight}px` }}
+      >
         <div className="timeline-rail timeline-rail--left">
           <span className="timeline-rail__label">Personal</span>
         </div>
@@ -583,18 +654,30 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
           const traceDurationYears = Math.max(0, traceEnd - g.start);
           if (traceDurationYears <= 0) return null;
           const traceDurationPct = (traceDurationYears / yearSpanLayout) * 100;
-          const traceHeightPx = Math.max(2, (traceDurationPct / 100) * timelineHeight);
-          const isFocusedTrace = i === activeIndex || (activeStartYear != null && g.start === activeStartYear);
+          const traceHeightPx = Math.max(
+            2,
+            (traceDurationPct / 100) * timelineHeight,
+          );
+          const isFocusedTrace =
+            i === activeIndex ||
+            (activeStartYear != null && g.start === activeStartYear);
           const progressInRange = isFocusedTrace ? 1 : 0;
           return (
             <div
               key={`range-${i}`}
-              className={`timeline-range timeline-range--${g.track} ${isCompactOverlapFadeIdx(i) ? 'timeline-range--under-active' : ''}`}
-              style={{ top: `calc(${g.topPct}% + 10px + ${stackOffsetPx[i]}px)`, height: `${traceHeightPx}px` }}
+              className={`timeline-range timeline-range--${g.track} ${isCompactOverlapFadeIdx(i) ? "timeline-range--under-active" : ""}`}
+              style={{
+                top: `calc(${g.topPct}% + 10px + ${stackOffsetPx[i]}px)`,
+                height: `${traceHeightPx}px`,
+              }}
             >
               <div
                 className={`timeline-range__trace timeline-range__trace--${g.track}`}
-                style={{ height: `${progressInRange * 100}%`, backgroundColor: items[i].type === 'life' ? '#ffffff' : items[i].accent }}
+                style={{
+                  height: `${progressInRange * 100}%`,
+                  backgroundColor:
+                    items[i].type === "life" ? "#ffffff" : items[i].accent,
+                }}
               />
             </div>
           );
@@ -602,18 +685,32 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
 
         {items.map((item, i) => {
           const isLinkedHighlight = isLinkedWithActive(i);
-          const isActive = i === activeIndex || isLinkedHighlight || (activeStartYear != null && geometry[i].start === activeStartYear);
+          const isActive =
+            i === activeIndex ||
+            isLinkedHighlight ||
+            (activeStartYear != null && geometry[i].start === activeStartYear);
           const isVisible = visibleSet.has(i);
           const track = geometry[i].track;
           const isCompactOverlapFade = isCompactOverlapFadeIdx(i);
           const isFullUnderActiveFade = isCompactOverlapFade;
           const isGraduatedOrDsquare = i === graduatedIdx || i === dsquareIdx;
-          const compactMergedLabel = 'Dsquare (+Graduated)';
+          const compactMergedLabel = "Dsquare (+Graduated)";
           const dsquareItem = dsquareIdx >= 0 ? items[dsquareIdx] : null;
-          const useCompactMergedMeta = isCompactTimeline && isGraduatedOrDsquare && !isActive && dsquareItem != null;
-          const displayName = (isCompactTimeline && isGraduatedOrDsquare && !isActive) ? compactMergedLabel : item.name;
-          const displayPeriod = useCompactMergedMeta ? dsquareItem.period : item.period;
-          const displayType = useCompactMergedMeta ? dsquareItem.type : item.type;
+          const useCompactMergedMeta =
+            isCompactTimeline &&
+            isGraduatedOrDsquare &&
+            !isActive &&
+            dsquareItem != null;
+          const displayName =
+            isCompactTimeline && isGraduatedOrDsquare && !isActive
+              ? compactMergedLabel
+              : item.name;
+          const displayPeriod = useCompactMergedMeta
+            ? dsquareItem.period
+            : item.period;
+          const displayType = useCompactMergedMeta
+            ? dsquareItem.type
+            : item.type;
           const noSheetCursorLabel = getNoDetailSheetCursorLabel(item.name);
           const blocksDetailSheet = noSheetCursorLabel != null;
           const noSheetHintId = `timeline-no-sheet-hint-${i}`;
@@ -621,19 +718,27 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
           return (
             <div
               key={i}
-              ref={(el) => { entryRefs.current[i] = el; }}
+              ref={(el) => {
+                entryRefs.current[i] = el;
+              }}
               data-index={i}
               tabIndex={0}
-              className={`timeline-entry timeline-entry--${track} ${isVisible ? 'timeline-entry--visible' : ''} ${isActive ? 'timeline-entry--active' : ''} ${isFullUnderActiveFade ? 'timeline-entry--under-active' : ''} ${blocksDetailSheet ? 'timeline-entry--no-sheet' : ''}`}
+              className={`timeline-entry timeline-entry--${track} ${isVisible ? "timeline-entry--visible" : ""} ${isActive ? "timeline-entry--active" : ""} ${isFullUnderActiveFade ? "timeline-entry--under-active" : ""} ${blocksDetailSheet ? "timeline-entry--no-sheet" : ""}`}
               aria-describedby={blocksDetailSheet ? noSheetHintId : undefined}
-              style={{ top: `calc(${geometry[i].topPct}% + ${stackOffsetPx[i]}px)` }}
+              style={{
+                top: `calc(${geometry[i].topPct}% + ${stackOffsetPx[i]}px)`,
+              }}
               onPointerEnter={
                 blocksDetailSheet && noSheetCursorLabel
                   ? (e) => handleNoSheetPointerEnter(e, noSheetCursorLabel)
                   : undefined
               }
-              onPointerMove={blocksDetailSheet ? handleNoSheetPointerMove : undefined}
-              onPointerLeave={blocksDetailSheet ? handleNoSheetPointerLeave : undefined}
+              onPointerMove={
+                blocksDetailSheet ? handleNoSheetPointerMove : undefined
+              }
+              onPointerLeave={
+                blocksDetailSheet ? handleNoSheetPointerLeave : undefined
+              }
               onPointerDown={(e) => {
                 setActiveIndex(i);
                 openItemSheet(i);
@@ -643,23 +748,53 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
               }}
               onFocus={() => setActiveIndex(i)}
               onKeyDown={(e) => {
-                if (e.key === 'ArrowDown') { e.preventDefault(); jumpToTimelineIndex(i + 1); return; }
-                if (e.key === 'ArrowUp') { e.preventDefault(); jumpToTimelineIndex(i - 1); return; }
-                if (e.key === 'Home') { e.preventDefault(); jumpToTimelineIndex(0); return; }
-                if (e.key === 'End') { e.preventDefault(); jumpToTimelineIndex(items.length - 1); return; }
-                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveIndex(i); openItemSheet(i); }
+                if (e.key === "ArrowDown") {
+                  e.preventDefault();
+                  jumpToTimelineIndex(i + 1);
+                  return;
+                }
+                if (e.key === "ArrowUp") {
+                  e.preventDefault();
+                  jumpToTimelineIndex(i - 1);
+                  return;
+                }
+                if (e.key === "Home") {
+                  e.preventDefault();
+                  jumpToTimelineIndex(0);
+                  return;
+                }
+                if (e.key === "End") {
+                  e.preventDefault();
+                  jumpToTimelineIndex(items.length - 1);
+                  return;
+                }
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setActiveIndex(i);
+                  openItemSheet(i);
+                }
               }}
             >
-              <div className={`timeline-dot timeline-dot--${item.type}`} style={{ '--dot-color': item.type === 'life' ? '#ffffff' : item.accent } as React.CSSProperties} />
+              <div
+                className={`timeline-dot timeline-dot--${item.type}`}
+                style={
+                  {
+                    "--dot-color":
+                      item.type === "life" ? "#ffffff" : item.accent,
+                  } as React.CSSProperties
+                }
+              />
               <div className="timeline-connector" />
               <div className="timeline-content">
                 <div className="timeline-heading">
                   <h3
-                    className={`timeline-name ${blocksDetailSheet ? 'timeline-name--archived' : ''}`.trim()}
+                    className={`timeline-name ${blocksDetailSheet ? "timeline-name--archived" : ""}`.trim()}
                   >
                     {blocksDetailSheet ? (
                       <>
-                        <span className="timeline-name__label">{displayName}</span>
+                        <span className="timeline-name__label">
+                          {displayName}
+                        </span>
                         <TimelineArchiveIcon className="timeline-name__archive-icon" />
                       </>
                     ) : (
@@ -668,10 +803,17 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
                   </h3>
                   <div className="timeline-heading-meta">
                     <span className="timeline-period">{displayPeriod}</span>
-                    <span className="timeline-tag timeline-tag--inline">{TAG_MAP[displayType]}</span>
+                    <span className="timeline-tag timeline-tag--inline">
+                      {TAG_MAP[displayType]}
+                    </span>
                   </div>
                 </div>
-                <div ref={(el) => { detailRefs.current[i] = el; }} className="timeline-detail">
+                <div
+                  ref={(el) => {
+                    detailRefs.current[i] = el;
+                  }}
+                  className="timeline-detail"
+                >
                   <p className="timeline-desc">{item.desc}</p>
                 </div>
               </div>
@@ -692,7 +834,7 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
         selectedPanelContent={selectedPanelContent}
         activeQuote={activeQuote}
         quoteIndex={quoteIndex}
-        tagLabel={selectedItem ? TAG_MAP[selectedItem.type] : ''}
+        tagLabel={selectedItem ? TAG_MAP[selectedItem.type] : ""}
         onClose={closeItemSheet}
       />
 

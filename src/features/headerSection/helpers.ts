@@ -1,14 +1,19 @@
-import { runGraphemeReveal, type GraphemeRevealState } from '../../effects/graphemeReveal';
-import type { MutableRefObject } from 'react';
+import {
+  runGraphemeReveal,
+  type GraphemeRevealState,
+} from "../../effects/graphemeReveal";
+import type { MutableRefObject } from "react";
 
 export function prefersReducedMotion(): boolean {
   return (
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
   );
 }
 
-export function cancelMenuCloseTimer(closeMenuTimerRef: MutableRefObject<number | null>): void {
+export function cancelMenuCloseTimer(
+  closeMenuTimerRef: MutableRefObject<number | null>,
+): void {
   if (closeMenuTimerRef.current == null) return;
   window.clearTimeout(closeMenuTimerRef.current);
   closeMenuTimerRef.current = null;
