@@ -210,6 +210,7 @@ export const PANEL_DATA: Record<string, PanelEntry> = {
   },
   ARRIVED: {
     subtitle: "Principal Product Designer",
+    projectUrl: "https://arrived.com/properties",
     tldr: "Arrived investors were drowning in data with no context for what it meant or what to do next. My role was to fix that: make the portfolio experience feel like guidance, not just a dashboard. That meant a new design system, a rebrand, and a ground-up redesign of the core investor experience across web and iOS.",
     gallery: [
       {
@@ -370,6 +371,7 @@ export const PANEL_DATA: Record<string, PanelEntry> = {
   },
   "FROMME HERE": {
     subtitle: "Founder",
+    projectUrl: "https://www.instagram.com/fromme_here/",
     tldr: "During Covid I was spending most of my time on the trails of the North Shore. I wanted to create something local: a brand riders could identify with and that gave back to the community maintaining those trails. So I built a headwear brand. Short ride, but a fun one.",
     gallery: [
       { src: "/images/FrommeHere/00%20-%20Fh.jpg", alt: "Fromme Here Brand" },
@@ -393,6 +395,7 @@ export const PANEL_DATA: Record<string, PanelEntry> = {
   },
   H2H: {
     subtitle: "Founder & Sole builder",
+    projectUrl: "https://h2happ.com/",
     tldr: "I love sports and fantasy leagues but I'm a busy dad and season-long commitments never stick. So in 2024 I set myself a challenge: learn Cursor, build an app from scratch, ship it to the App Store. H2H was the result: a one-night fantasy sports game built for people who want to play when they have time, not manage a roster all season.",
     gallery: [
       { src: "/images/H2H/00%20-%20H2HLogo.jpg", alt: "Head-2-Head logo" },
