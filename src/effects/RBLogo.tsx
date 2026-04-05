@@ -58,6 +58,23 @@ export interface RBLogoProps extends SVGProps<SVGSVGElement> {
   onAnimationComplete?: () => void;
 }
 
+export const RBThumbnail = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="100"
+    height="100"
+    fill="none"
+    viewBox="0 0 100 100"
+    {...props}
+  >
+    <path fill="#fff" d="M0 0h100v100H0z" />
+    <path
+      fill="#121212"
+      d="M17.3 64.1h9.4v9.4h-9.4zm0-9.4h9.4v9.4h-9.4zm0-9.4h9.4v9.4h-9.4zm0-9.4h9.4v9.4h-9.4zm0-9.4h9.4v9.4h-9.4zm9.4 0h9.4v9.4h-9.4zm9.4 0h9.4v9.4h-9.4zm0 9.4h9.4v9.4h-9.4zm-9.4 9.4h9.4v9.4h-9.4zm9.4 9.4h9.4v9.4h-9.4zm0 9.4h9.4v9.4h-9.4zm18.4-37.6h9.4v9.4h-9.4zm0 9.4h9.4v9.4h-9.4zm0 9.4h9.4v9.4h-9.4zm0 9.4h9.4v9.4h-9.4zm0 9.4h9.4v9.4h-9.4zm9.4-37.6h9.4v9.4h-9.4zm9.4 0h9.4v9.4h-9.4zm0 9.4h9.4v9.4h-9.4zm0 18.8h9.4v9.4h-9.4zm0 9.4h9.4v9.4h-9.4zm-9.4 0h9.4v9.4h-9.4zm0-18.8h9.4v9.4h-9.4z"
+    />
+  </svg>
+);
+
 interface RBLogoALTProps extends SVGProps<SVGSVGElement> {
   patternId: string;
 }

@@ -20,7 +20,7 @@ import {
 import StickerPeel from './StickerPeel';
 import './HeaderSection.css';
 
-const RB_FACE_STICKER_SRC = '/images/RBFace.png';
+const RB_THUMBNAIL_STICKER_SRC = '/images/RBThumbnail.svg';
 
 export default function HeaderSection() {
   const [index, setIndex] = useState(0);
@@ -209,7 +209,7 @@ export default function HeaderSection() {
             aria-hidden
           >
             <StickerPeel
-              imageSrc={RB_FACE_STICKER_SRC}
+              imageSrc={RB_THUMBNAIL_STICKER_SRC}
               width={120}
               rotate={0}
               peelBackHoverPct={30}
