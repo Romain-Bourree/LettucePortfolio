@@ -16,7 +16,7 @@
 }
 
 .whats-next__kicker {
-  margin: 0 0 14px;
+  margin: 0 0 10px;
   font-family: "Space Mono", monospace;
   font-size: 12px;
   letter-spacing: 0.12em;
@@ -24,12 +24,33 @@
   color: rgba(255, 255, 255, 0.74);
 }
 
+.whats-next__leads {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4em;
+}
+
+.whats-next__intro {
+  display: inline;
+}
+
+.whats-next__kicker .grapheme-reveal__noise--zero,
+.whats-next__intro .grapheme-reveal__noise--zero {
+  color: #97ffcd;
+}
+
+.whats-next__kicker .grapheme-reveal__noise--one,
+.whats-next__intro .grapheme-reveal__noise--one {
+  color: #00ff84;
+}
+
 .whats-next__lead {
-  margin: 0 0 16px;
+  margin: 0;
   font-family: "Geist Mono", monospace;
   font-size: 14px;
   font-weight: 400;
-  line-height: 1.55;
+  line-height: 1.5;
   letter-spacing: -0.01em;
   color: rgba(255, 255, 255, 0.9);
 }
@@ -46,7 +67,7 @@
   padding: 0 0.55em;
   font-family: "Geist Mono", monospace;
   font-size: 14px;
-  line-height: 1.55;
+  line-height: 1.5;
   color: #00ff84;
   background: rgba(0, 229, 160, 0.25);
   border: none;
@@ -132,6 +153,18 @@
   opacity: 1;
 }
 
+/* Touch / no-hover: show desktop hover treatment at rest (no :hover on tap devices) */
+@media (hover: none) {
+  .whats-next__button.whats-next__cta--link005::before {
+    transform: scaleX(1);
+  }
+
+  .whats-next__button.whats-next__cta--link005 .whats-next__cta-icon {
+    transform: translateX(0) rotate(45deg);
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .whats-next__button.whats-next__cta--link005,
   .whats-next__button.whats-next__cta--link005::before,
@@ -146,4 +179,33 @@
   font-size: 12px;
   line-height: 1.55;
   color: rgba(255, 255, 255, 0.78);
+}
+
+/* Mobile: stack question + CTA with explicit gap; tighter line-height than inline-wrap */
+@media (max-width: 767px) {
+  .whats-next__leads {
+    gap: 1.15rem;
+  }
+
+  .whats-next__lead {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35em;
+    line-height: 1.32;
+  }
+
+  .whats-next__intro {
+    display: block;
+    line-height: 1.32;
+  }
+
+  .whats-next__button {
+    line-height: 1.32;
+    margin-top: 0;
+  }
+
+  .whats-next__button.whats-next__cta--link005 {
+    line-height: 1.32;
+  }
 }

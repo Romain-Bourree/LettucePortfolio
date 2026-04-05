@@ -83,6 +83,42 @@ function buildRevealFrameHTML(
 
 export type GraphemeRevealState = { p: number };
 
+/**
+ * Drive the scramble reveal to an arbitrary progress `p` (0 … graphemes.length).
+ * Used for scroll-scrubbed reveals (e.g. ScrollTrigger). At `p >= length`, sets plain `textContent`.
+ */
+export function applyGraphemeRevealProgress(
+  el: HTMLElement,
+  graphemes: string[],
+  p: number,
+  pool: string,
+  finalText: string,
+  dataTextSyncEl?: HTMLElement | null,
+): void {
+  const n = graphemes.length;
+  if (n === 0) {
+    el.textContent = "";
+    if (dataTextSyncEl) {
+      dataTextSyncEl.setAttribute("data-text", "");
+    }
+    return;
+  }
+  if (p >= n) {
+    el.textContent = finalText;
+    if (dataTextSyncEl) {
+      dataTextSyncEl.setAttribute("data-text", finalText);
+    }
+    return;
+  }
+  el.innerHTML = buildRevealFrameHTML(graphemes, p, pool);
+  if (dataTextSyncEl) {
+    dataTextSyncEl.setAttribute(
+      "data-text",
+      buildRevealFrame(graphemes, p, pool),
+    );
+  }
+}
+
 export function runGraphemeReveal(options: {
   el: HTMLElement;
   toText: string;
@@ -103,19 +139,9 @@ export function runGraphemeReveal(options: {
   const graphemes = segmentGraphemes(toText);
   const n = graphemes.length;
 
-  const syncDataText = (p: number) => {
-    if (dataTextSyncEl) {
-      dataTextSyncEl.setAttribute(
-        "data-text",
-        buildRevealFrame(graphemes, p, pool),
-      );
-    }
-  };
-
   gsap.killTweensOf(animState);
   animState.p = 0;
-  el.innerHTML = buildRevealFrameHTML(graphemes, 0, pool);
-  syncDataText(0);
+  applyGraphemeRevealProgress(el, graphemes, 0, pool, toText, dataTextSyncEl);
 
   const duration = Math.min(2.4, 0.5 + n * 0.01);
 
@@ -124,14 +150,24 @@ export function runGraphemeReveal(options: {
     duration,
     ease: "power2.out",
     onUpdate: () => {
-      el.innerHTML = buildRevealFrameHTML(graphemes, animState.p, pool);
-      syncDataText(animState.p);
+      applyGraphemeRevealProgress(
+        el,
+        graphemes,
+        animState.p,
+        pool,
+        toText,
+        dataTextSyncEl,
+      );
     },
     onComplete: () => {
-      el.textContent = toText;
-      if (dataTextSyncEl) {
-        dataTextSyncEl.setAttribute("data-text", toText);
-      }
+      applyGraphemeRevealProgress(
+        el,
+        graphemes,
+        n,
+        pool,
+        toText,
+        dataTextSyncEl,
+      );
       onComplete?.();
     },
   });

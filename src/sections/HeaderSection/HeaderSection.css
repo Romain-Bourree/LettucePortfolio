@@ -487,6 +487,18 @@
   color: rgba(0, 255, 132, 0.95);
 }
 
+/* No hover on touch: “The full picture” sweep + arrow match desktop hover at rest */
+@media (hover: none) {
+  .about-hero__scroll-link.about-hero__scroll-link--sweep::before {
+    transform: scaleX(1);
+  }
+
+  .about-hero__scroll-link.about-hero__scroll-link--sweep
+    .about-hero__scroll-icon {
+    color: rgba(0, 255, 132, 0.95);
+  }
+}
+
 @keyframes about-hero-scroll-nudge {
   0%,
   100% {

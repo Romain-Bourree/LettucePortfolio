@@ -4,6 +4,8 @@
   width: 100%;
   background-color: var(--bg-wash, #121212);
   box-sizing: border-box;
+  /* ~one viewport step of scroll beyond the headline (pairs with end: "+=260") */
+  padding-bottom: clamp(96px, 22vh, 200px);
 }
 
 .tagline-section__inner {
@@ -30,6 +32,14 @@
   display: block;
   line-height: inherit;
   text-transform: uppercase;
+}
+
+.tagline-section__line .grapheme-reveal__noise--zero {
+  color: #97ffcd;
+}
+
+.tagline-section__line .grapheme-reveal__noise--one {
+  color: #00ff84;
 }
 
 .tagline-section__line--accent {

@@ -226,3 +226,35 @@
 .timeline-sheet-carousel__row-meta--static.is-active {
   opacity: 1;
 }
+
+/* No hover on phones: keep the “expanded / hovered” look as the default for every strip */
+@media (hover: none) {
+  .timeline-sheet-carousel__stack .timeline-sheet-carousel__row {
+    height: 60cqi;
+  }
+
+  .timeline-sheet-carousel__stack .timeline-sheet-carousel__row .timeline-sheet-carousel__row-img {
+    transform: scale(1.04) translateZ(0);
+  }
+
+  .timeline-sheet-carousel__stack .timeline-sheet-carousel__row .timeline-sheet-carousel__row-shade {
+    opacity: 1;
+  }
+
+  .timeline-sheet-carousel__stack .timeline-sheet-carousel__row .timeline-sheet-carousel__row-meta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .timeline-sheet-carousel__row--static {
+    height: 60cqi;
+  }
+
+  .timeline-sheet-carousel__row--static .timeline-sheet-carousel__row-shade--static {
+    opacity: 1;
+  }
+
+  .timeline-sheet-carousel__row--static .timeline-sheet-carousel__row-meta--static {
+    opacity: 1;
+  }
+}
