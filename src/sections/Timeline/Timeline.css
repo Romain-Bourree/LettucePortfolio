@@ -344,26 +344,6 @@
   pointer-events: none;
 }
 
-/* Suppress label/card only; keep marker dot and rail trace visible */
-.timeline-entry--under-active-content {
-  pointer-events: none;
-}
-
-.timeline-entry--under-active-content .timeline-content {
-  opacity: 0 !important;
-  visibility: hidden;
-}
-
-.timeline-entry--under-active-content .timeline-connector {
-  opacity: 0;
-  visibility: hidden;
-}
-
-.timeline-entry--under-active-content .timeline-dot {
-  opacity: 1;
-  visibility: visible;
-}
-
 .timeline-entry--right .timeline-content {
   left: var(--timeline-content-offset);
 }

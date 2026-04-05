@@ -16,6 +16,9 @@ import {
   QUOTE_ROTATION_MS,
   SAME_YEAR_STACK_OFFSET_PX,
   SCROLL_SCRUB_ALPHA,
+  SCROLL_SCRUB_ALPHA_MOBILE,
+  PX_PER_YEAR,
+  PX_PER_YEAR_MOBILE,
   SHEET_TRANSITION_MS,
   TAG_MAP,
   TICK_SOUND,
@@ -110,7 +113,8 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
   const minYear = Math.min(...parsedPeriods.map((p) => p.start));
   const maxYear = Math.max(...parsedPeriods.map((p) => p.end));
   const yearSpanLayout = Math.max(1, maxYear - minYear + LAYOUT_END_BUFFER_YEARS);
-  const timelineHeight = Math.max(2400, yearSpanLayout * 100 + TIMELINE_CLOSURE_EXTRA_PX);
+  const pxPerYear = isCompactTimeline ? PX_PER_YEAR_MOBILE : PX_PER_YEAR;
+  const timelineHeight = Math.max(2400, yearSpanLayout * pxPerYear + TIMELINE_CLOSURE_EXTRA_PX);
   const currentYear = minYear + yearSpanLayout * scrubbedScroll;
   const titleYear = displayYear;
 
@@ -140,25 +144,6 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     ),
     [activeIndex],
   );
-  /** Content + connector hidden; dot and vertical trace stay visible (desktop + compact overlap rules). */
-  const isContentSuppressedByActiveIdx = (idx: number): boolean => {
-    if (activeIndex < 0) return false;
-    const activeName = items[activeIndex].name;
-    const targetName = items[idx].name;
-    if (isCompactTimeline) {
-      if (activeName === 'Faktis' && (targetName === 'Graduated' || targetName === 'Dsquare')) return true;
-      if ((activeName === 'Graduated' || activeName === 'Dsquare') && targetName === 'Invoke') return true;
-      if (activeName === 'Invoke' && targetName === 'Krushon') return true;
-      if (activeName === 'Mogo' && targetName === 'IBS & Me') return true;
-      if (activeName === 'Fromme Here' && targetName === 'Arrived') return true;
-      if (activeName === 'Arrived' && targetName === 'H2H') return true;
-      if (activeName === 'H2H' && targetName === 'ASSET') return true;
-      return false;
-    }
-    if (activeName === 'Faktis' && targetName === 'Graduated') return true;
-    if ((activeName === 'Graduated' || activeName === 'Dsquare') && targetName === 'Invoke') return true;
-    return false;
-  };
   const isCompactOverlapFadeIdx = (idx: number): boolean => {
     if (!isCompactTimeline || activeIndex < 0) return false;
     if (idx !== graduatedIdx && idx !== dsquareIdx) return false;
@@ -211,6 +196,9 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
     if (prevTraceEnd <= prevGeom.start) return year >= prevGeom.start;
     return year >= prevTraceEnd;
   };
+
+  const isCompactRef = useRef(isCompactTimeline);
+  isCompactRef.current = isCompactTimeline;
 
   const scrollDepsRef = useRef({
     minYear,
@@ -295,7 +283,8 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
       const tick = () => {
         const target = scrollTargetRef.current;
         const prev = scrubbedRef.current;
-        let next = prev + (target - prev) * SCROLL_SCRUB_ALPHA;
+        const alpha = isCompactRef.current ? SCROLL_SCRUB_ALPHA_MOBILE : SCROLL_SCRUB_ALPHA;
+        let next = prev + (target - prev) * alpha;
         if (Math.abs(target - next) < 0.0005) next = target;
         scrubbedRef.current = next;
         setScrubbedScroll(next);
@@ -617,7 +606,6 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
           const isVisible = visibleSet.has(i);
           const track = geometry[i].track;
           const isCompactOverlapFade = isCompactOverlapFadeIdx(i);
-          const isContentSuppressed = isContentSuppressedByActiveIdx(i) && !isCompactOverlapFade;
           const isFullUnderActiveFade = isCompactOverlapFade;
           const isGraduatedOrDsquare = i === graduatedIdx || i === dsquareIdx;
           const compactMergedLabel = 'Dsquare (+Graduated)';
@@ -636,7 +624,7 @@ const Timeline: React.FC<TimelineProps> = ({ onActiveColorChange }) => {
               ref={(el) => { entryRefs.current[i] = el; }}
               data-index={i}
               tabIndex={0}
-              className={`timeline-entry timeline-entry--${track} ${isVisible ? 'timeline-entry--visible' : ''} ${isActive ? 'timeline-entry--active' : ''} ${isFullUnderActiveFade ? 'timeline-entry--under-active' : ''} ${isContentSuppressed ? 'timeline-entry--under-active-content' : ''} ${blocksDetailSheet ? 'timeline-entry--no-sheet' : ''}`}
+              className={`timeline-entry timeline-entry--${track} ${isVisible ? 'timeline-entry--visible' : ''} ${isActive ? 'timeline-entry--active' : ''} ${isFullUnderActiveFade ? 'timeline-entry--under-active' : ''} ${blocksDetailSheet ? 'timeline-entry--no-sheet' : ''}`}
               aria-describedby={blocksDetailSheet ? noSheetHintId : undefined}
               style={{ top: `calc(${geometry[i].topPct}% + ${stackOffsetPx[i]}px)` }}
               onPointerEnter={

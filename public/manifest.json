@@ -3,9 +3,9 @@
   "name": "RB Portfolio",
   "icons": [
     {
-      "src": "/images/RBThumbnail.svg",
-      "type": "image/svg+xml",
-      "sizes": "any"
+      "src": "/images/RBFace.png",
+      "type": "image/png",
+      "sizes": "512x512"
     }
   ],
   "start_url": ".",
